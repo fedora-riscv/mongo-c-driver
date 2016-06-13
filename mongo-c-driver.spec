@@ -23,7 +23,7 @@
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
 Version:   1.3.5
-Release:   2%{?dist}
+Release:   3%{?dist}
 License:   ASL 2.0
 Group:     System Environment/Libraries
 URL:       https://github.com/%{gh_owner}/%{gh_project}
@@ -130,6 +130,9 @@ rm    %{buildroot}/%{_mandir}/man3/[t-u]*
 
 %check
 %if %{with_tests}
+# workaround for https://bugzilla.redhat.com/1345868
+sed -e 's/diff -u/diff -uB/' -i tests/abicheck.sh
+
 : Run a server
 mkdir dbtest
 mongod \
@@ -178,6 +181,10 @@ exit $ret
 
 
 %changelog
+* Mon Jun 13 2016 Remi Collet <remi@fedoraproject.org> - 1.3.5-3
+- add workaround to abicheck failure
+  see https://bugzilla.redhat.com/1345868
+
 * Mon May 16 2016 Remi Collet <remi@fedoraproject.org> - 1.3.5-2
 - add patch to enforce system crypto policies
 
