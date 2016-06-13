@@ -131,7 +131,7 @@ rm    %{buildroot}/%{_mandir}/man3/[t-u]*
 %check
 %if %{with_tests}
 # workaround for https://bugzilla.redhat.com/1345868
-sed -e 's/diff -u/diff -uB/' -i tests/abicheck.sh
+sed -e 's/diff -u/diff -uwB/' -i tests/abicheck.sh
 
 : Run a server
 mkdir dbtest
