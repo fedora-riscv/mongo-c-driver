@@ -23,7 +23,7 @@
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
 Version:   1.3.5
-Release:   4%{?dist}
+Release:   5%{?dist}
 License:   ASL 2.0
 Group:     System Environment/Libraries
 URL:       https://github.com/%{gh_owner}/%{gh_project}
@@ -45,8 +45,8 @@ BuildRequires: cyrus-sasl-devel
 %if %{with_tests}
 BuildRequires: mongodb-server
 BuildRequires: openssl
-BuildRequires: perl
 %endif
+BuildRequires: perl
 # From man pages
 BuildRequires: python
 
@@ -181,6 +181,9 @@ exit $ret
 
 
 %changelog
+* Tue Jul 26 2016 Remi Collet <remi@fedoraproject.org> - 1.3.5-5
+- add BR on perl, FTBFS from Koschei
+
 * Mon Jun 13 2016 Remi Collet <remi@fedoraproject.org> - 1.3.5-4
 - add workaround to abicheck failure
   see https://bugzilla.redhat.com/1345868
