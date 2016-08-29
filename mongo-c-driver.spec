@@ -23,7 +23,7 @@
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
 Version:   1.3.5
-Release:   5%{?dist}
+Release:   6%{?dist}
 License:   ASL 2.0
 Group:     System Environment/Libraries
 URL:       https://github.com/%{gh_owner}/%{gh_project}
@@ -181,6 +181,9 @@ exit $ret
 
 
 %changelog
+* Mon Aug 29 2016 Petr Pisar <ppisar@redhat.com> - 1.3.5-6
+- Rebuild against libbson-1.4.0 (bug #1361166)
+
 * Tue Jul 26 2016 Remi Collet <remi@fedoraproject.org> - 1.3.5-5
 - add BR on perl, FTBFS from Koschei
 
