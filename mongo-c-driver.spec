@@ -21,17 +21,23 @@
 # in MongoDB 3.2, and support is being removed in 3.4.
 %global with_tests   0%{?_with_tests:1}
 %endif
-%global with_tests   0
 
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
 Version:   1.5.0
-Release:   0.1.%{prever}%{?dist}
+Release:   0.2.%{prever}%{?dist}
 License:   ASL 2.0
 Group:     System Environment/Libraries
 URL:       https://github.com/%{gh_owner}/%{gh_project}
 
 Source0:   https://github.com/%{gh_owner}/%{gh_project}/releases/download/%{version}%{?prever:-%{prever}}/%{gh_project}-%{version}%{?prever:-%{prever}}.tar.gz
+
+# https://jira.mongodb.org/browse/CDRIVER-1703
+Source1:   mongo-c-driver-missing.tgz
+
+# https://jira.mongodb.org/browse/CDRIVER-1702
+# https://github.com/mongodb/mongo-c-driver/pull/401
+Patch0:    mongo-c-driver-pr401.patch
 
 BuildRequires: pkgconfig(openssl)
 BuildRequires: pkgconfig(libbson-1.0) > %{bsonver}
@@ -82,6 +88,9 @@ Documentation: http://api.mongodb.org/c/%{version}/
 
 %prep
 %setup -q -n %{gh_project}-%{version}%{?prever:-%{prever}}
+
+tar xf %{SOURCE1}
+%patch0 -p1 -b .pr401
 
 rm -r src/libbson
 
@@ -165,6 +174,11 @@ exit $ret
 
 
 %changelog
+* Fri Oct 14 2016 Remi Collet <remi@fedoraproject.org> - 1.5.0-0.2.rc2
+- open https://jira.mongodb.org/browse/CDRIVER-1703 missing files
+- open https://jira.mongodb.org/browse/CDRIVER-1702 broken test
+- enable test suite
+
 * Fri Oct 14 2016 Remi Collet <remi@fedoraproject.org> - 1.5.0-0.1.rc2
 - update to 1.5.0-rc2
 - drop crypto patch merged upstream
