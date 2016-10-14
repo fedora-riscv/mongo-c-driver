@@ -10,6 +10,8 @@
 %global gh_project   mongo-c-driver
 %global libname      libmongoc
 %global libver       1.0
+%global prever       rc2
+%global bsonver      1.5
 
 %ifarch x86_64
 %global with_tests   0%{!?_without_tests:1}
@@ -19,24 +21,20 @@
 # in MongoDB 3.2, and support is being removed in 3.4.
 %global with_tests   0%{?_with_tests:1}
 %endif
+%global with_tests   0
 
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
-Version:   1.3.5
-Release:   6%{?dist}
+Version:   1.5.0
+Release:   0.1.%{prever}%{?dist}
 License:   ASL 2.0
 Group:     System Environment/Libraries
 URL:       https://github.com/%{gh_owner}/%{gh_project}
 
 Source0:   https://github.com/%{gh_owner}/%{gh_project}/releases/download/%{version}%{?prever:-%{prever}}/%{gh_project}-%{version}%{?prever:-%{prever}}.tar.gz
 
-# Enforce system crypto policies
-# https://fedoraproject.org/wiki/Packaging:CryptoPolicies
-# https://jira.mongodb.org/browse/CDRIVER-1231
-Patch0:    %{name}-crypto.patch
-
 BuildRequires: pkgconfig(openssl)
-BuildRequires: pkgconfig(libbson-1.0)
+BuildRequires: pkgconfig(libbson-1.0) > %{bsonver}
 %if 0%{?fedora} > 21 || 0%{?rhel} > 6
 BuildRequires: pkgconfig(libsasl2)
 %else
@@ -85,12 +83,10 @@ Documentation: http://api.mongodb.org/c/%{version}/
 %prep
 %setup -q -n %{gh_project}-%{version}%{?prever:-%{prever}}
 
-%patch0 -p1 -b .cryptopolicy
-
 rm -r src/libbson
 
 # Ignore check for libbson version = libmongoc version
-sed -e 's/libbson-1.0 >= $MONGOC_RELEASED_VERSION/libbson-1.0 >= 1.3/' \
+sed -e 's/libbson-1.0 >= \$MONGOC_RELEASED_VERSION/libbson-1.0 >= %{bsonver}/' \
     -i configure
 
 
@@ -98,10 +94,10 @@ sed -e 's/libbson-1.0 >= $MONGOC_RELEASED_VERSION/libbson-1.0 >= 1.3/' \
 export LIBS=-lpthread
 
 %configure \
-  --enable-hardening \
-  --enable-debug-symbols\
+  --enable-debug-symbols \
   --enable-shm-counters \
   --disable-automatic-init-and-cleanup \
+  --enable-crypto-system-profile \
 %if %{with_tests}
   --enable-tests \
 %else
@@ -121,18 +117,10 @@ make install DESTDIR=%{buildroot}
 
 rm    %{buildroot}%{_libdir}/*la
 rm -r %{buildroot}%{_datadir}/doc/
-# drop "generic" man pages, avoid conflicts
-# https://jira.mongodb.org/browse/CDRIVER-1039
-rm    %{buildroot}/%{_mandir}/man3/[a-l]*
-rm    %{buildroot}/%{_mandir}/man3/ma*
-rm    %{buildroot}/%{_mandir}/man3/[t-u]*
 
 
 %check
 %if %{with_tests}
-# workaround for https://bugzilla.redhat.com/1345868
-sed -e 's/cpp -P/cpp --freestanding -P/' -i tests/abicheck.sh
-
 : Run a server
 mkdir dbtest
 mongod \
@@ -153,8 +141,6 @@ make check || ret=1
 [ -s server.pid ] && kill $(cat server.pid)
 
 exit $ret
-%else
-: check disabled, missing '--with tests' option
 %endif
 
 
@@ -169,18 +155,22 @@ exit $ret
 %{!?_licensedir:%global license %%doc}
 %license COPYING
 %{_libdir}/%{libname}-%{libver}.so.*
-%{_libdir}/%{libname}-priv.so.*
 
 %files devel
 %doc NEWS README*
 %{_includedir}/%{libname}-%{libver}
 %{_libdir}/%{libname}-%{libver}.so
-%{_libdir}/%{libname}-priv.so
 %{_libdir}/pkgconfig/%{libname}-*.pc
 %{_mandir}/man3/mongoc*
 
 
 %changelog
+* Fri Oct 14 2016 Remi Collet <remi@fedoraproject.org> - 1.5.0-0.1.rc2
+- update to 1.5.0-rc2
+- drop crypto patch merged upstream
+- drop the private library
+- disable test suite
+
 * Mon Aug 29 2016 Petr Pisar <ppisar@redhat.com> - 1.3.5-6
 - Rebuild against libbson-1.4.0 (bug #1361166)
 
