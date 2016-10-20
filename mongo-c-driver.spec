@@ -10,7 +10,7 @@
 %global gh_project   mongo-c-driver
 %global libname      libmongoc
 %global libver       1.0
-%global prever       rc2
+%global prever       rc3
 %global bsonver      1.5
 
 %ifarch x86_64
@@ -25,19 +25,12 @@
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
 Version:   1.5.0
-Release:   0.2.%{prever}%{?dist}
+Release:   0.3.%{prever}%{?dist}
 License:   ASL 2.0
 Group:     System Environment/Libraries
 URL:       https://github.com/%{gh_owner}/%{gh_project}
 
 Source0:   https://github.com/%{gh_owner}/%{gh_project}/releases/download/%{version}%{?prever:-%{prever}}/%{gh_project}-%{version}%{?prever:-%{prever}}.tar.gz
-
-# https://jira.mongodb.org/browse/CDRIVER-1703
-Source1:   mongo-c-driver-missing.tgz
-
-# https://jira.mongodb.org/browse/CDRIVER-1702
-# https://github.com/mongodb/mongo-c-driver/pull/401
-Patch0:    mongo-c-driver-pr401.patch
 
 BuildRequires: pkgconfig(openssl)
 BuildRequires: pkgconfig(libbson-1.0) > %{bsonver}
@@ -88,9 +81,6 @@ Documentation: http://api.mongodb.org/c/%{version}/
 
 %prep
 %setup -q -n %{gh_project}-%{version}%{?prever:-%{prever}}
-
-tar xf %{SOURCE1}
-%patch0 -p1 -b .pr401
 
 rm -r src/libbson
 
@@ -174,6 +164,10 @@ exit $ret
 
 
 %changelog
+* Thu Oct 20 2016 Remi Collet <remi@fedoraproject.org> - 1.5.0-0.3.rc3
+- update to 1.5.0-rc3
+- drop patches merged upstream
+
 * Fri Oct 14 2016 Remi Collet <remi@fedoraproject.org> - 1.5.0-0.2.rc2
 - open https://jira.mongodb.org/browse/CDRIVER-1703 missing files
 - open https://jira.mongodb.org/browse/CDRIVER-1702 broken test
