@@ -10,7 +10,7 @@
 %global gh_project   mongo-c-driver
 %global libname      libmongoc
 %global libver       1.0
-%global prever       rc6
+#global prever       rc6
 %global bsonver      1.5
 
 %ifarch x86_64
@@ -25,7 +25,7 @@
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
 Version:   1.5.0
-Release:   0.5.%{prever}%{?dist}
+Release:   1%{?dist}
 License:   ASL 2.0
 Group:     System Environment/Libraries
 URL:       https://github.com/%{gh_owner}/%{gh_project}
@@ -164,6 +164,9 @@ exit $ret
 
 
 %changelog
+* Mon Nov 28 2016 Remi Collet <remi@fedoraproject.org> - 1.5.0-1
+- update to 1.5.0
+
 * Fri Nov 18 2016 Remi Collet <remi@fedoraproject.org> - 1.5.0-0.5.rc6
 - update to 1.5.0-rc6
 
