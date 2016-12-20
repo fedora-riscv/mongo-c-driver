@@ -24,7 +24,7 @@
 
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
-Version:   1.5.0
+Version:   1.5.1
 Release:   1%{?dist}
 License:   ASL 2.0
 Group:     System Environment/Libraries
@@ -34,11 +34,7 @@ Source0:   https://github.com/%{gh_owner}/%{gh_project}/releases/download/%{vers
 
 BuildRequires: pkgconfig(openssl)
 BuildRequires: pkgconfig(libbson-1.0) > %{bsonver}
-%if 0%{?fedora} > 21 || 0%{?rhel} > 6
 BuildRequires: pkgconfig(libsasl2)
-%else
-BuildRequires: cyrus-sasl-devel
-%endif
 %if %{with_tests}
 BuildRequires: mongodb-server
 BuildRequires: openssl
@@ -164,6 +160,9 @@ exit $ret
 
 
 %changelog
+* Tue Dec 20 2016 Remi Collet <remi@fedoraproject.org> - 1.5.1-1
+- update to 1.5.1
+
 * Mon Nov 28 2016 Remi Collet <remi@fedoraproject.org> - 1.5.0-1
 - update to 1.5.0
 
