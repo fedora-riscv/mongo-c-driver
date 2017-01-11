@@ -135,6 +135,8 @@ mongod \
 : Run the test suite
 ret=0
 export MONGOC_TEST_OFFLINE=on
+export MONGOC_TEST_SKIP_SLOW=on
+
 make check || ret=1
 
 : Cleanup
@@ -168,6 +170,7 @@ exit $ret
 * Wed Jan 11 2017 Remi Collet <remi@fedoraproject.org> - 1.5.2-1
 - update to 1.5.2
 - run server on both IPv4 and IPv6
+- skip slow tests
 - open https://jira.mongodb.org/browse/CDRIVER-1988 - Failed test
 
 * Tue Dec 20 2016 Remi Collet <remi@fedoraproject.org> - 1.5.1-1
