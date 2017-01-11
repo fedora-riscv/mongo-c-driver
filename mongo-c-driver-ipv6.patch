@@ -1,0 +1,24 @@
+From 333cbc2cd2f54f3650f51c39a2490c28c355cc0f Mon Sep 17 00:00:00 2001
+From: Alexey Ponomarev <nine@yandex-team.ru>
+Date: Tue, 27 Dec 2016 18:27:48 +0700
+Subject: [PATCH] CDRIVER-1972 Support for ipv6 hostnames
+
+For cases when connection endpoint specified as hostname with ipv6
+address only.
+---
+ src/mongoc/mongoc-uri.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/mongoc/mongoc-uri.c b/src/mongoc/mongoc-uri.c
+index c5248b2..fb1c1e3 100644
+--- a/src/mongoc/mongoc-uri.c
++++ b/src/mongoc/mongoc-uri.c
+@@ -102,7 +102,7 @@ mongoc_uri_append_host (mongoc_uri_t  *uri,
+    } else {
+       bson_snprintf (link_->host_and_port, sizeof link_->host_and_port,
+                      "%s:%hu", host, port);
+-      link_->family = strstr (host, ".sock") ? AF_UNIX : AF_INET;
++      link_->family = strstr (host, ".sock") ? AF_UNIX : AF_UNSPEC;
+    }
+    link_->host_and_port[sizeof link_->host_and_port - 1] = '\0';
+    link_->port = port;
