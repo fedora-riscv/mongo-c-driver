@@ -1,6 +1,6 @@
 # remirepo/fedora spec file for mongo-c-driver
 #
-# Copyright (c) 2015-2016 Remi Collet
+# Copyright (c) 2015-2017 Remi Collet
 # License: CC-BY-SA
 # http://creativecommons.org/licenses/by-sa/4.0/
 #
@@ -24,7 +24,7 @@
 
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
-Version:   1.5.1
+Version:   1.5.2
 Release:   1%{?dist}
 License:   ASL 2.0
 Group:     System Environment/Libraries
@@ -160,6 +160,9 @@ exit $ret
 
 
 %changelog
+* Wed Jan 11 2017 Remi Collet <remi@fedoraproject.org> - 1.5.2-1
+- update to 1.5.2
+
 * Tue Dec 20 2016 Remi Collet <remi@fedoraproject.org> - 1.5.1-1
 - update to 1.5.1
 
