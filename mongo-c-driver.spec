@@ -32,6 +32,9 @@ URL:       https://github.com/%{gh_owner}/%{gh_project}
 
 Source0:   https://github.com/%{gh_owner}/%{gh_project}/releases/download/%{version}%{?prever:-%{prever}}/%{gh_project}-%{version}%{?prever:-%{prever}}.tar.gz
 
+# https://github.com/mongodb/mongo-c-driver/pull/419
+Patch0:    %{name}-pr419.patch
+
 BuildRequires: pkgconfig(openssl)
 BuildRequires: pkgconfig(libbson-1.0) > %{bsonver}
 BuildRequires: pkgconfig(libsasl2)
@@ -78,6 +81,8 @@ Documentation: http://api.mongodb.org/c/%{version}/
 %prep
 %setup -q -n %{gh_project}-%{version}%{?prever:-%{prever}}
 
+%patch0 -p1 -b .pr419
+
 rm -r src/libbson
 
 # Ignore check for libbson version = libmongoc version
@@ -120,7 +125,7 @@ rm -r %{buildroot}%{_datadir}/doc/
 mkdir dbtest
 mongod \
   --journal \
-  --bind_ip     127.0.0.1 \
+  --ipv6 \
   --unixSocketPrefix /tmp \
   --logpath     $PWD/server.log \
   --pidfilepath $PWD/server.pid \
@@ -162,6 +167,8 @@ exit $ret
 %changelog
 * Wed Jan 11 2017 Remi Collet <remi@fedoraproject.org> - 1.5.2-1
 - update to 1.5.2
+- run server on both IPv4 and IPv6
+- open https://jira.mongodb.org/browse/CDRIVER-1988 - Failed test
 
 * Tue Dec 20 2016 Remi Collet <remi@fedoraproject.org> - 1.5.1-1
 - update to 1.5.1
