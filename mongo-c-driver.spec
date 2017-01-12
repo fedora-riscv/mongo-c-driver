@@ -24,16 +24,13 @@
 
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
-Version:   1.5.2
+Version:   1.5.3
 Release:   1%{?dist}
 License:   ASL 2.0
 Group:     System Environment/Libraries
 URL:       https://github.com/%{gh_owner}/%{gh_project}
 
 Source0:   https://github.com/%{gh_owner}/%{gh_project}/releases/download/%{version}%{?prever:-%{prever}}/%{gh_project}-%{version}%{?prever:-%{prever}}.tar.gz
-
-# Upstream commit, to revert
-Patch1:    %{name}-ipv6.patch
 
 BuildRequires: pkgconfig(openssl)
 BuildRequires: pkgconfig(libbson-1.0) > %{bsonver}
@@ -80,8 +77,6 @@ Documentation: http://api.mongodb.org/c/%{version}/
 
 %prep
 %setup -q -n %{gh_project}-%{version}%{?prever:-%{prever}}
-
-%patch1 -p1 -R -b .ipv6
 
 rm -r src/libbson
 
@@ -167,6 +162,9 @@ exit $ret
 
 
 %changelog
+* Thu Jan 12 2017 Remi Collet <remi@fedoraproject.org> - 1.5.3-1
+- update to 1.5.3
+
 * Wed Jan 11 2017 Remi Collet <remi@fedoraproject.org> - 1.5.2-1
 - update to 1.5.2
 - run server on both IPv4 and IPv6
