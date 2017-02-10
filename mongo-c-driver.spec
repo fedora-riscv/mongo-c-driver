@@ -32,6 +32,9 @@ URL:       https://github.com/%{gh_owner}/%{gh_project}
 
 Source0:   https://github.com/%{gh_owner}/%{gh_project}/releases/download/%{version}%{?prever:-%{prever}}/%{gh_project}-%{version}%{?prever:-%{prever}}.tar.gz
 
+# https://jira.mongodb.org/browse/CDRIVER-2042
+Patch0:    %{name}-tests.patch
+
 BuildRequires: pkgconfig(openssl)
 BuildRequires: pkgconfig(libbson-1.0) > %{bsonver}
 BuildRequires: pkgconfig(libsasl2)
@@ -78,9 +81,7 @@ Documentation: http://api.mongodb.org/c/%{version}/
 
 %prep
 %setup -q -n %{gh_project}-%{version}%{?prever:-%{prever}}
-
-# will be rebuild
-rm doc/man/*.3
+%patch0 -p1
 
 rm -r src/libbson
 
@@ -109,7 +110,6 @@ export LIBS=-lpthread
   --enable-man-pages
 
 make %{_smp_mflags} V=1
-make %{_smp_mflags} man V=1
 
 
 %install
@@ -169,6 +169,8 @@ exit $ret
 %changelog
 * Thu Feb  9 2017 Remi Collet <remi@fedoraproject.org> - 1.6.0-1
 - update to 1.6.0
+- add fix for https://jira.mongodb.org/browse/CDRIVER-2042
+  from https://github.com/mongodb/mongo-c-driver/pull/421
 
 * Thu Jan 12 2017 Remi Collet <remi@fedoraproject.org> - 1.5.3-1
 - update to 1.5.3
