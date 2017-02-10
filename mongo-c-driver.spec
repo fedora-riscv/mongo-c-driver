@@ -11,7 +11,7 @@
 %global libname      libmongoc
 %global libver       1.0
 #global prever       rc6
-%global bsonver      1.5
+%global bsonver      1.6
 
 %ifarch x86_64
 %global with_tests   0%{!?_without_tests:1}
@@ -24,7 +24,7 @@
 
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
-Version:   1.5.3
+Version:   1.6.0
 Release:   1%{?dist}
 License:   ASL 2.0
 Group:     System Environment/Libraries
@@ -42,6 +42,7 @@ BuildRequires: openssl
 BuildRequires: perl
 # From man pages
 BuildRequires: python
+BuildRequires: /usr/bin/sphinx-build
 
 Requires:   %{name}-libs%{?_isa} = %{version}-%{release}
 # Sub package removed
@@ -78,6 +79,9 @@ Documentation: http://api.mongodb.org/c/%{version}/
 %prep
 %setup -q -n %{gh_project}-%{version}%{?prever:-%{prever}}
 
+# will be rebuild
+rm doc/man/*.3
+
 rm -r src/libbson
 
 # Ignore check for libbson version = libmongoc version
@@ -105,6 +109,7 @@ export LIBS=-lpthread
   --enable-man-pages
 
 make %{_smp_mflags} V=1
+make %{_smp_mflags} man V=1
 
 
 %install
@@ -162,6 +167,9 @@ exit $ret
 
 
 %changelog
+* Thu Feb  9 2017 Remi Collet <remi@fedoraproject.org> - 1.6.0-1
+- update to 1.6.0
+
 * Thu Jan 12 2017 Remi Collet <remi@fedoraproject.org> - 1.5.3-1
 - update to 1.5.3
 
