@@ -24,16 +24,13 @@
 
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
-Version:   1.6.0
+Version:   1.6.1
 Release:   1%{?dist}
 License:   ASL 2.0
 Group:     System Environment/Libraries
 URL:       https://github.com/%{gh_owner}/%{gh_project}
 
 Source0:   https://github.com/%{gh_owner}/%{gh_project}/releases/download/%{version}%{?prever:-%{prever}}/%{gh_project}-%{version}%{?prever:-%{prever}}.tar.gz
-
-# https://jira.mongodb.org/browse/CDRIVER-2042
-Patch0:    %{name}-tests.patch
 
 BuildRequires: pkgconfig(openssl)
 BuildRequires: pkgconfig(libbson-1.0) > %{bsonver}
@@ -81,9 +78,14 @@ Documentation: http://api.mongodb.org/c/%{version}/
 
 %prep
 %setup -q -n %{gh_project}-%{version}%{?prever:-%{prever}}
-%patch0 -p1
 
-rm -r src/libbson
+# delete sources but keep doc for man pages
+rm -r src/libbson/src
+
+# Use bundled libbson documentation
+# https://jira.mongodb.org/browse/CDRIVER-2078
+sed -e 's|http://mongoc.org/libbson/current|../src/libbson/doc/html|' \
+    -i doc/conf.py
 
 # Ignore check for libbson version = libmongoc version
 sed -e 's/libbson-1.0 >= \$MONGOC_RELEASED_VERSION/libbson-1.0 >= %{bsonver}/' \
@@ -109,7 +111,9 @@ export LIBS=-lpthread
   --disable-html-docs \
   --enable-man-pages
 
-make %{_smp_mflags} V=1
+make %{?_smp_mflags} all V=1
+# Explicit man target is needed for generating manual pages
+make %{?_smp_mflags} man V=1
 
 
 %install
@@ -167,6 +171,11 @@ exit $ret
 
 
 %changelog
+* Tue Mar  7 2017 Remi Collet <remi@fedoraproject.org> - 1.6.1-1
+- update to 1.6.1
+- open https://jira.mongodb.org/browse/CDRIVER-2078
+  can't build man pages
+
 * Thu Feb  9 2017 Remi Collet <remi@fedoraproject.org> - 1.6.0-1
 - update to 1.6.0
 - add fix for https://jira.mongodb.org/browse/CDRIVER-2042
