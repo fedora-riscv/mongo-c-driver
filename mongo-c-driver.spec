@@ -39,6 +39,9 @@ Source0:   https://github.com/%{gh_owner}/%{gh_project}/releases/download/%{vers
 # 3. Don't install COPYING file which is not doc but license
 Patch0:    %{name}-rpm.patch
 
+BuildRequires: autoconf
+BuildRequires: automake
+BuildRequires: libtool
 BuildRequires: pkgconfig(openssl)
 BuildRequires: pkgconfig(libbson-1.0) > %{bsonver}
 BuildRequires: pkgconfig(libsasl2)
