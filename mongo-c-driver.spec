@@ -25,12 +25,19 @@
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
 Version:   1.6.1
-Release:   1%{?dist}
+Release:   2%{?dist}
 License:   ASL 2.0
 Group:     System Environment/Libraries
 URL:       https://github.com/%{gh_owner}/%{gh_project}
 
 Source0:   https://github.com/%{gh_owner}/%{gh_project}/releases/download/%{version}%{?prever:-%{prever}}/%{gh_project}-%{version}%{?prever:-%{prever}}.tar.gz
+
+# RPM specific changes
+# 1. Ignore check for libbson version = libmongoc version
+# 2. Use bundled libbson documentation
+#    https://jira.mongodb.org/browse/CDRIVER-2078
+# 3. Don't install COPYING file which is not doc but license
+Patch0:    %{name}-rpm.patch
 
 BuildRequires: pkgconfig(openssl)
 BuildRequires: pkgconfig(libbson-1.0) > %{bsonver}
@@ -78,18 +85,14 @@ Documentation: http://api.mongodb.org/c/%{version}/
 
 %prep
 %setup -q -n %{gh_project}-%{version}%{?prever:-%{prever}}
+%patch0 -p1 -b .rpm
 
-# delete sources but keep doc for man pages
+: Generate build scripts from sources
+autoreconf --force --install --verbose -I build/autotools
+
+: delete sources but keep doc for man pages
 rm -r src/libbson/src
 
-# Use bundled libbson documentation
-# https://jira.mongodb.org/browse/CDRIVER-2078
-sed -e 's|http://mongoc.org/libbson/current|../src/libbson/doc/html|' \
-    -i doc/conf.py
-
-# Ignore check for libbson version = libmongoc version
-sed -e 's/libbson-1.0 >= \$MONGOC_RELEASED_VERSION/libbson-1.0 >= %{bsonver}/' \
-    -i configure
 
 
 %build
@@ -109,6 +112,7 @@ export LIBS=-lpthread
   --enable-ssl \
   --with-libbson=system \
   --disable-html-docs \
+  --enable-examples \
   --enable-man-pages
 
 make %{?_smp_mflags} all V=1
@@ -119,8 +123,16 @@ make %{?_smp_mflags} man V=1
 %install
 make install DESTDIR=%{buildroot}
 
-rm    %{buildroot}%{_libdir}/*la
-rm -r %{buildroot}%{_datadir}/doc/
+rm %{buildroot}%{_libdir}/*la
+
+: install examples
+for i in examples/*.c examples/*/*.c; do
+  install -Dpm 644 $i %{buildroot}%{_datadir}/doc/%{name}/$i
+done
+
+: Rename documentation to match subpackage name
+mv %{buildroot}%{_datadir}/doc/%{name} \
+   %{buildroot}%{_datadir}/doc/%{name}-devel
 
 
 %check
@@ -160,10 +172,11 @@ exit $ret
 %files libs
 %{!?_licensedir:%global license %%doc}
 %license COPYING
+%license THIRD_PARTY_NOTICES
 %{_libdir}/%{libname}-%{libver}.so.*
 
 %files devel
-%doc NEWS README*
+%{_docdir}/%{name}-devel
 %{_includedir}/%{libname}-%{libver}
 %{_libdir}/%{libname}-%{libver}.so
 %{_libdir}/pkgconfig/%{libname}-*.pc
@@ -171,6 +184,11 @@ exit $ret
 
 
 %changelog
+* Wed Mar  8 2017 Remi Collet <remi@fedoraproject.org> - 1.6.1-2
+- rebuild with new upstream tarball
+- add examples in devel documentation
+- use patch instead of sed hacks for rpm specific changes
+
 * Tue Mar  7 2017 Remi Collet <remi@fedoraproject.org> - 1.6.1-1
 - update to 1.6.1
 - open https://jira.mongodb.org/browse/CDRIVER-2078
