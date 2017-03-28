@@ -18,18 +18,6 @@ diff -up ./build/autotools/Libbson.m4.rpm ./build/autotools/Libbson.m4
                           [],
                           [AC_MSG_ERROR([
  
-diff -up ./doc/conf.py.rpm ./doc/conf.py
---- ./doc/conf.py.rpm	2017-03-08 07:00:37.849097371 +0100
-+++ ./doc/conf.py	2017-03-08 07:00:37.850097376 +0100
-@@ -14,7 +14,7 @@ extensions = [
- intersphinx_mapping = {
-     # TODO: update to http://mongoc.org/libbson/%(version)s once libbson 1.6.0
-     # is released.
--    'bson': ('http://mongoc.org/libbson/current', None),
-+    'bson': ('../src/libbson/doc/html', None),
- }
- 
- # General information about the project.
 diff -up ./Makefile.am.rpm ./Makefile.am
 --- ./Makefile.am.rpm	2017-03-07 14:33:43.000000000 +0100
 +++ ./Makefile.am	2017-03-08 07:00:37.848097367 +0100

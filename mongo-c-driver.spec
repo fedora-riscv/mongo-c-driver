@@ -24,8 +24,8 @@
 
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
-Version:   1.6.1
-Release:   2%{?dist}
+Version:   1.6.2
+Release:   1%{?dist}
 License:   ASL 2.0
 Group:     System Environment/Libraries
 URL:       https://github.com/%{gh_owner}/%{gh_project}
@@ -93,9 +93,8 @@ Documentation: http://api.mongodb.org/c/%{version}/
 : Generate build scripts from sources
 autoreconf --force --install --verbose -I build/autotools
 
-: delete sources but keep doc for man pages
-rm -r src/libbson/src
-
+: delete bundled libbson sources
+rm -r src/libbson
 
 
 %build
@@ -119,8 +118,9 @@ export LIBS=-lpthread
   --enable-man-pages
 
 make %{?_smp_mflags} all V=1
+
 # Explicit man target is needed for generating manual pages
-make %{?_smp_mflags} man V=1
+make %{?_smp_mflags} doc/man V=1
 
 
 %install
@@ -187,6 +187,9 @@ exit $ret
 
 
 %changelog
+* Tue Mar 28 2017 Remi Collet <remi@fedoraproject.org> - 1.6.2-1
+- update to 1.6.2
+
 * Wed Mar  8 2017 Remi Collet <remi@fedoraproject.org> - 1.6.1-2
 - rebuild with new upstream tarball
 - add examples in devel documentation
