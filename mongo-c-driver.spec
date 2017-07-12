@@ -49,7 +49,7 @@ BuildRequires: pkgconfig(libsasl2)
 BuildRequires: mongodb-server
 BuildRequires: openssl
 %endif
-BuildRequires: perl
+BuildRequires: perl-interpreter
 # From man pages
 BuildRequires: python
 BuildRequires: /usr/bin/sphinx-build
