@@ -10,8 +10,8 @@
 %global gh_project   mongo-c-driver
 %global libname      libmongoc
 %global libver       1.0
-#global prever       rc6
-%global bsonver      1.6
+%global prever       rc2
+%global bsonver      1.7
 
 %ifarch x86_64
 %global with_tests   0%{!?_without_tests:1}
@@ -24,8 +24,8 @@
 
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
-Version:   1.6.3
-Release:   3%{?dist}
+Version:   1.7.0
+Release:   0.1.%{prever}%{?dist}
 License:   ASL 2.0
 Group:     System Environment/Libraries
 URL:       https://github.com/%{gh_owner}/%{gh_project}
@@ -45,6 +45,13 @@ BuildRequires: libtool
 BuildRequires: pkgconfig(openssl)
 BuildRequires: pkgconfig(libbson-1.0) > %{bsonver}
 BuildRequires: pkgconfig(libsasl2)
+BuildRequires: pkgconfig(zlib)
+%if 0%{?fedora} >= 26
+# pkgconfig file introduce in 1.1.4
+BuildRequires: pkgconfig(snappy)
+%else
+BuildRequires: snappy-devel
+%endif
 %if %{with_tests}
 BuildRequires: mongodb-server
 BuildRequires: openssl
@@ -87,7 +94,7 @@ Documentation: http://api.mongodb.org/c/%{version}/
 
 
 %prep
-%setup -q -n %{gh_project}-%{version}%{?prever:-%{prever}}
+%setup -q -n %{gh_project}-%{version}%{?prever:-dev}
 %patch0 -p1 -b .rpm
 
 : Generate build scripts from sources
@@ -113,6 +120,8 @@ export LIBS=-lpthread
   --enable-sasl \
   --enable-ssl \
   --with-libbson=system \
+  --with-snappy \
+  --with-zlib \
   --disable-html-docs \
   --enable-examples \
   --enable-man-pages
@@ -183,10 +192,15 @@ exit $ret
 %{_includedir}/%{libname}-%{libver}
 %{_libdir}/%{libname}-%{libver}.so
 %{_libdir}/pkgconfig/%{libname}-*.pc
+%{_libdir}/cmake/%{libname}-%{libver}
 %{_mandir}/man3/mongoc*
 
 
 %changelog
+* Tue Aug  8 2017 Remi Collet <remi@fedoraproject.org> - 1.7.0-0.1.rc2
+- update to 1.7.0-rc2
+- add --with-snappy and --with-zlib build options
+
 * Thu Aug 03 2017 Fedora Release Engineering <releng@fedoraproject.org> - 1.6.3-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_27_Binutils_Mass_Rebuild
 
