@@ -10,11 +10,16 @@
 %global gh_project   mongo-c-driver
 %global libname      libmongoc
 %global libver       1.0
-%global prever       rc2
+#global prever       rc2
 %global bsonver      1.7
 
 %ifarch x86_64
+%if 0%{?fedora} > 26
+# mongodb-server broken in rawhide
+%global with_tests   0
+%else
 %global with_tests   0%{!?_without_tests:1}
+%endif
 %else
 # See https://jira.mongodb.org/browse/CDRIVER-1186
 # 32-bit MongoDB support was officially deprecated
@@ -25,7 +30,7 @@
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
 Version:   1.7.0
-Release:   0.1.%{prever}%{?dist}
+Release:   1%{?dist}
 License:   ASL 2.0
 Group:     System Environment/Libraries
 URL:       https://github.com/%{gh_owner}/%{gh_project}
@@ -197,6 +202,10 @@ exit $ret
 
 
 %changelog
+* Thu Aug 10 2017 Remi Collet <remi@fedoraproject.org> - 1.7.0-1
+- update to 1.7.0
+- disable test suite in rawhide (mongodb-server is broken)
+
 * Tue Aug  8 2017 Remi Collet <remi@fedoraproject.org> - 1.7.0-0.1.rc2
 - update to 1.7.0-rc2
 - add --with-snappy and --with-zlib build options
