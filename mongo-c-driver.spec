@@ -11,7 +11,7 @@
 %global libname      libmongoc
 %global libver       1.0
 #global prever       rc2
-%global bsonver      1.7
+%global bsonver      1.8
 
 %ifarch x86_64
 %if 0%{?fedora} > 26
@@ -29,7 +29,7 @@
 
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
-Version:   1.7.0
+Version:   1.8.0
 Release:   1%{?dist}
 License:   ASL 2.0
 Group:     System Environment/Libraries
@@ -131,6 +131,9 @@ export LIBS=-lpthread
   --enable-examples \
   --enable-man-pages
 
+rm -r src/snappy-*
+rm -r src/zlib-*
+
 make %{?_smp_mflags} all V=1
 
 # Explicit man target is needed for generating manual pages
@@ -202,6 +205,9 @@ exit $ret
 
 
 %changelog
+* Fri Sep 15 2017 Remi Collet <remi@fedoraproject.org> - 1.8.0-1
+- update to 1.8.0
+
 * Thu Aug 10 2017 Remi Collet <remi@fedoraproject.org> - 1.7.0-1
 - update to 1.7.0
 - disable test suite in rawhide (mongodb-server is broken)
