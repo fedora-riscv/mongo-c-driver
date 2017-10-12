@@ -14,12 +14,8 @@
 %global bsonver      1.8
 
 %ifarch x86_64
-%if 0%{?fedora} > 26
-# mongodb-server broken in rawhide
-%global with_tests   0
-%else
-%global with_tests   0%{!?_without_tests:1}
-%endif
+# Temporarily disabled
+%global with_tests   0%{?_with_tests:1}
 %else
 # See https://jira.mongodb.org/browse/CDRIVER-1186
 # 32-bit MongoDB support was officially deprecated
@@ -29,7 +25,7 @@
 
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
-Version:   1.8.0
+Version:   1.8.1
 Release:   1%{?dist}
 License:   ASL 2.0
 Group:     System Environment/Libraries
@@ -125,8 +121,8 @@ export LIBS=-lpthread
   --enable-sasl \
   --enable-ssl \
   --with-libbson=system \
-  --with-snappy \
-  --with-zlib \
+  --with-snappy=system \
+  --with-zlib=system \
   --disable-html-docs \
   --enable-examples \
   --enable-man-pages
@@ -205,6 +201,9 @@ exit $ret
 
 
 %changelog
+* Thu Oct 12 2017 Remi Collet <remi@fedoraproject.org> - 1.8.1-1
+- update to 1.8.1
+
 * Fri Sep 15 2017 Remi Collet <remi@fedoraproject.org> - 1.8.0-1
 - update to 1.8.0
 
