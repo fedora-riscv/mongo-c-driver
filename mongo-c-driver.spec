@@ -25,7 +25,7 @@
 
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
-Version:   1.8.1
+Version:   1.8.2
 Release:   1%{?dist}
 License:   ASL 2.0
 Group:     System Environment/Libraries
@@ -127,7 +127,6 @@ export LIBS=-lpthread
   --enable-examples \
   --enable-man-pages
 
-rm -r src/snappy-*
 rm -r src/zlib-*
 
 make %{?_smp_mflags} all V=1
@@ -201,6 +200,9 @@ exit $ret
 
 
 %changelog
+* Fri Nov 17 2017 Remi Collet <remi@fedoraproject.org> - 1.8.2-1
+- update to 1.8.2
+
 * Thu Oct 12 2017 Remi Collet <remi@fedoraproject.org> - 1.8.1-1
 - update to 1.8.1
 
