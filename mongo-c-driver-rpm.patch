@@ -6,7 +6,7 @@ diff -up ./build/autotools/Libbson.m4.rpm ./build/autotools/Libbson.m4
  # greater than our required version.
  AS_IF([test "x${with_libbson}" = xauto],
 -      [PKG_CHECK_MODULES(BSON, [libbson-1.0 >= libbson_required_version],
-+      [PKG_CHECK_MODULES(BSON, [libbson-1.0 >= 1.6],
++      [PKG_CHECK_MODULES(BSON, [libbson-1.0 >= 1.9],
                           [with_libbson=system],
                           [with_libbson=bundled])])
  
@@ -14,14 +14,14 @@ diff -up ./build/autotools/Libbson.m4.rpm ./build/autotools/Libbson.m4
  AS_IF([test "x${with_libbson}" = xsystem],
        [PKG_CHECK_MODULES(BSON,
 -                         [libbson-1.0 >= libbson_required_version],
-+                         [libbson-1.0 >= 1.6],
++                         [libbson-1.0 >= 1.9],
                           [],
                           [AC_MSG_ERROR([
  
 diff -up ./Makefile.am.rpm ./Makefile.am
 --- ./Makefile.am.rpm	2017-03-07 14:33:43.000000000 +0100
 +++ ./Makefile.am	2017-03-08 07:00:37.848097367 +0100
-@@ -39,10 +39,10 @@ DISTCHECK_CONFIGURE_FLAGS = --enable-sil
+@@ -42,10 +42,10 @@ DISTCHECK_CONFIGURE_FLAGS = --enable-sil
  
  mongocdocdir = ${docdir}
  mongocdoc_DATA = \
