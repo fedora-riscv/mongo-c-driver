@@ -1,6 +1,6 @@
 # remirepo/fedora spec file for mongo-c-driver
 #
-# Copyright (c) 2015-2017 Remi Collet
+# Copyright (c) 2015-2018 Remi Collet
 # License: CC-BY-SA
 # http://creativecommons.org/licenses/by-sa/4.0/
 #
@@ -11,11 +11,10 @@
 %global libname      libmongoc
 %global libver       1.0
 #global prever       rc2
-%global bsonver      1.8
+%global bsonver      1.9
 
-%ifarch x86_64
-# Temporarily disabled
-%global with_tests   0%{?_with_tests:1}
+%if 0%{?__isa_bits} == 64
+%global with_tests   0%{!?_without_tests:1}
 %else
 # See https://jira.mongodb.org/browse/CDRIVER-1186
 # 32-bit MongoDB support was officially deprecated
@@ -25,8 +24,8 @@
 
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
-Version:   1.8.2
-Release:   1%{?dist}
+Version:   1.9.2
+Release:   2%{?dist}
 License:   ASL 2.0
 Group:     System Environment/Libraries
 URL:       https://github.com/%{gh_owner}/%{gh_project}
@@ -200,6 +199,11 @@ exit $ret
 
 
 %changelog
+* Fri Jan 12 2018 Remi Collet <remi@remirepo.net> - 1.9.2-2
+- update to 1.9.2 (no change)
+- enable test suite on 64-bit
+- raise dependency on libbson 1.9
+
 * Fri Nov 17 2017 Remi Collet <remi@fedoraproject.org> - 1.8.2-1
 - update to 1.8.2
 
