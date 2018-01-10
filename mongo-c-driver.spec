@@ -1,6 +1,6 @@
 # remirepo/fedora spec file for mongo-c-driver
 #
-# Copyright (c) 2015-2017 Remi Collet
+# Copyright (c) 2015-2018 Remi Collet
 # License: CC-BY-SA
 # http://creativecommons.org/licenses/by-sa/4.0/
 #
@@ -25,7 +25,7 @@
 
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
-Version:   1.9.0
+Version:   1.9.1
 Release:   1%{?dist}
 License:   ASL 2.0
 Group:     System Environment/Libraries
@@ -200,6 +200,9 @@ exit $ret
 
 
 %changelog
+* Wed Jan 10 2018 Remi Collet <remi@remirepo.net> - 1.9.1-1
+- update to 1.9.1
+
 * Fri Dec 22 2017 Remi Collet <remi@remirepo.net> - 1.9.0-1
 - update to 1.9.0
 - raise dependency on libbson 1.9
