@@ -25,7 +25,7 @@
 
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
-Version:   1.9.1
+Version:   1.9.2
 Release:   1%{?dist}
 License:   ASL 2.0
 Group:     System Environment/Libraries
@@ -200,6 +200,9 @@ exit $ret
 
 
 %changelog
+* Fri Jan 12 2018 Remi Collet <remi@remirepo.net> - 1.9.2-1
+- update to 1.9.2 (no change)
+
 * Wed Jan 10 2018 Remi Collet <remi@remirepo.net> - 1.9.1-1
 - update to 1.9.1
 
