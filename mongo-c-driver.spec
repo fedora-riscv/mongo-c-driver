@@ -13,9 +13,8 @@
 #global prever       rc2
 %global bsonver      1.9
 
-%ifarch x86_64
-# Temporarily disabled
-%global with_tests   0%{?_with_tests:1}
+%if %{__isa_bits} == 64
+%global with_tests   0%{!?_without_tests:1}
 %else
 # See https://jira.mongodb.org/browse/CDRIVER-1186
 # 32-bit MongoDB support was officially deprecated
@@ -26,7 +25,7 @@
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
 Version:   1.9.2
-Release:   1%{?dist}
+Release:   2%{?dist}
 License:   ASL 2.0
 Group:     System Environment/Libraries
 URL:       https://github.com/%{gh_owner}/%{gh_project}
@@ -200,6 +199,9 @@ exit $ret
 
 
 %changelog
+* Fri Jan 12 2018 Remi Collet <remi@remirepo.net> - 1.9.2-2
+- enable test suite on 64-bit
+
 * Fri Jan 12 2018 Remi Collet <remi@remirepo.net> - 1.9.2-1
 - update to 1.9.2 (no change)
 
