@@ -13,7 +13,7 @@
 #global prever       rc2
 %global bsonver      1.9
 
-%if 0%{?__isa_bits} == 64
+%ifarch x86_64
 %global with_tests   0%{!?_without_tests:1}
 %else
 # See https://jira.mongodb.org/browse/CDRIVER-1186
@@ -201,7 +201,7 @@ exit $ret
 %changelog
 * Fri Jan 12 2018 Remi Collet <remi@remirepo.net> - 1.9.2-2
 - update to 1.9.2 (no change)
-- enable test suite on 64-bit
+- enable test suite on x86_64
 - raise dependency on libbson 1.9
 
 * Fri Nov 17 2017 Remi Collet <remi@fedoraproject.org> - 1.8.2-1
