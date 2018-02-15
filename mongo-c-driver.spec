@@ -25,9 +25,8 @@
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
 Version:   1.9.2
-Release:   3%{?dist}
+Release:   4%{?dist}
 License:   ASL 2.0
-Group:     System Environment/Libraries
 URL:       https://github.com/%{gh_owner}/%{gh_project}
 
 Source0:   https://github.com/%{gh_owner}/%{gh_project}/releases/download/%{version}%{?prever:-%{prever}}/%{gh_project}-%{version}%{?prever:-%{prever}}.tar.gz
@@ -41,6 +40,7 @@ Patch0:    %{name}-rpm.patch
 
 BuildRequires: autoconf
 BuildRequires: automake
+BuildRequires: gcc
 BuildRequires: libtool
 BuildRequires: pkgconfig(openssl)
 BuildRequires: pkgconfig(libbson-1.0) > %{bsonver}
@@ -74,7 +74,6 @@ Provides:   %{name}-tools%{?_isa} = %{version}
 
 %package libs
 Summary:    Shared libraries for %{name}
-Group:      Development/Libraries
 
 %description libs
 This package contains the shared libraries for %{name}.
@@ -82,7 +81,6 @@ This package contains the shared libraries for %{name}.
 
 %package devel
 Summary:    Header files and development libraries for %{name}
-Group:      Development/Libraries
 Requires:   %{name}%{?_isa} = %{version}-%{release}
 Requires:   pkgconfig
 
@@ -176,10 +174,6 @@ exit $ret
 %endif
 
 
-%post   libs -p /sbin/ldconfig
-%postun libs -p /sbin/ldconfig
-
-
 %files
 %{_bindir}/mongoc-stat
 
@@ -199,6 +193,9 @@ exit $ret
 
 
 %changelog
+* Wed Feb 14 2018 Remi Collet <remi@remirepo.net> - 1.9.2-4
+- drop ldconfig scriptlets
+
 * Thu Feb 08 2018 Fedora Release Engineering <releng@fedoraproject.org> - 1.9.2-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_28_Mass_Rebuild
 
