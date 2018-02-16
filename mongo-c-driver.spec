@@ -14,7 +14,7 @@
 %global bsonver      1.9
 
 %if 0%{?__isa_bits} == 64
-%global with_tests   0%{!?_without_tests:1}
+%global with_tests   0%{?_with_tests:1}
 %else
 # See https://jira.mongodb.org/browse/CDRIVER-1186
 # 32-bit MongoDB support was officially deprecated
@@ -195,6 +195,7 @@ exit $ret
 %changelog
 * Wed Feb 14 2018 Remi Collet <remi@remirepo.net> - 1.9.2-4
 - drop ldconfig scriptlets
+- disable again test suite
 
 * Thu Feb 08 2018 Fedora Release Engineering <releng@fedoraproject.org> - 1.9.2-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_28_Mass_Rebuild
