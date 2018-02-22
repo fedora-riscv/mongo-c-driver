@@ -14,7 +14,7 @@
 %global bsonver      1.9
 
 %if 0%{?__isa_bits} == 64
-%global with_tests   0%{?_with_tests:1}
+%global with_tests   0%{!?_without_tests:1}
 %else
 # See https://jira.mongodb.org/browse/CDRIVER-1186
 # 32-bit MongoDB support was officially deprecated
@@ -25,7 +25,7 @@
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
 Version:   1.9.2
-Release:   4%{?dist}
+Release:   5%{?dist}
 License:   ASL 2.0
 URL:       https://github.com/%{gh_owner}/%{gh_project}
 
@@ -37,6 +37,9 @@ Source0:   https://github.com/%{gh_owner}/%{gh_project}/releases/download/%{vers
 #    https://jira.mongodb.org/browse/CDRIVER-2078
 # 3. Don't install COPYING file which is not doc but license
 Patch0:    %{name}-rpm.patch
+
+# See https://jira.mongodb.org/browse/CDRIVER-2516
+Patch1:    0001-CDRIVER-2516-keep-25-free-in-platform-string.patch
 
 BuildRequires: autoconf
 BuildRequires: automake
@@ -94,6 +97,7 @@ Documentation: http://api.mongodb.org/c/%{version}/
 %prep
 %setup -q -n %{gh_project}-%{version}%{?prever:-dev}
 %patch0 -p1 -b .rpm
+%patch1 -p1 -b .2516
 
 : Generate build scripts from sources
 autoreconf --force --install --verbose -I build/autotools
@@ -193,6 +197,10 @@ exit $ret
 
 
 %changelog
+* Thu Feb 22 2018 Remi Collet <remi@remirepo.net> - 1.9.2-5
+- add workaround for https://jira.mongodb.org/browse/CDRIVER-2516
+- enable test suite
+
 * Wed Feb 14 2018 Remi Collet <remi@remirepo.net> - 1.9.2-4
 - drop ldconfig scriptlets
 - disable again test suite

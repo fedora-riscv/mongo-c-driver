@@ -1,0 +1,28 @@
+From f7674ecaace1f9a95739176aec063c9210aaf9fe Mon Sep 17 00:00:00 2001
+From: Remi Collet <remi@remirepo.net>
+Date: Thu, 22 Feb 2018 06:50:46 +0100
+Subject: [PATCH] CDRIVER-2516 keep 25% free in platform string
+
+---
+ src/mongoc/mongoc-handshake.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/src/mongoc/mongoc-handshake.c b/src/mongoc/mongoc-handshake.c
+index 02ee95a20..f385001b3 100644
+--- a/src/mongoc/mongoc-handshake.c
++++ b/src/mongoc/mongoc-handshake.c
+@@ -354,6 +354,11 @@ _set_platform_string (mongoc_handshake_t *handshake)
+          str, " LDFLAGS=%s", MONGOC_EVALUATE_STR (MONGOC_USER_SET_LDFLAGS));
+    }
+ 
++   /* keep 25% free */
++   if (str->len > (HANDSHAKE_MAX_SIZE * 3 / 4)) {
++      bson_string_truncate (str, (HANDSHAKE_MAX_SIZE * 3 / 4));
++      bson_string_append (str, "…");
++   }
+    handshake->platform = bson_string_free (str, false);
+ }
+ 
+-- 
+2.14.3
+
