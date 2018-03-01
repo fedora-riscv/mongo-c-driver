@@ -24,8 +24,8 @@
 
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
-Version:   1.9.2
-Release:   5%{?dist}
+Version:   1.9.3
+Release:   1%{?dist}
 License:   ASL 2.0
 URL:       https://github.com/%{gh_owner}/%{gh_project}
 
@@ -45,7 +45,8 @@ BuildRequires: autoconf
 BuildRequires: automake
 BuildRequires: gcc
 BuildRequires: libtool
-BuildRequires: pkgconfig(openssl)
+# pkg-config may pull compat-openssl10
+BuildRequires: openssl-devel
 BuildRequires: pkgconfig(libbson-1.0) > %{bsonver}
 BuildRequires: pkgconfig(libsasl2)
 BuildRequires: pkgconfig(zlib)
@@ -197,6 +198,9 @@ exit $ret
 
 
 %changelog
+* Thu Mar  1 2018 Remi Collet <remi@remirepo.net> - 1.9.3-1
+- update to 1.9.3
+
 * Thu Feb 22 2018 Remi Collet <remi@remirepo.net> - 1.9.2-5
 - add workaround for https://jira.mongodb.org/browse/CDRIVER-2516
 - enable test suite
