@@ -24,8 +24,8 @@
 
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
-Version:   1.9.2
-Release:   2%{?dist}
+Version:   1.9.3
+Release:   1%{?dist}
 License:   ASL 2.0
 Group:     System Environment/Libraries
 URL:       https://github.com/%{gh_owner}/%{gh_project}
@@ -41,8 +41,10 @@ Patch0:    %{name}-rpm.patch
 
 BuildRequires: autoconf
 BuildRequires: automake
+BuildRequires: gcc
 BuildRequires: libtool
-BuildRequires: pkgconfig(openssl)
+# pkg-config may pull compat-openssl10
+BuildRequires: openssl-devel
 BuildRequires: pkgconfig(libbson-1.0) > %{bsonver}
 BuildRequires: pkgconfig(libsasl2)
 BuildRequires: pkgconfig(zlib)
@@ -199,6 +201,9 @@ exit $ret
 
 
 %changelog
+* Thu Mar  1 2018 Remi Collet <remi@remirepo.net> - 1.9.3-1
+- update to 1.9.3
+
 * Fri Jan 12 2018 Remi Collet <remi@remirepo.net> - 1.9.2-2
 - update to 1.9.2 (no change)
 - enable test suite on x86_64
