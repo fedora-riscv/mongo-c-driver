@@ -25,7 +25,7 @@
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
 Version:   1.9.3
-Release:   1%{?dist}
+Release:   2%{?dist}
 License:   ASL 2.0
 URL:       https://github.com/%{gh_owner}/%{gh_project}
 
@@ -40,6 +40,10 @@ Patch0:    %{name}-rpm.patch
 
 # See https://jira.mongodb.org/browse/CDRIVER-2516
 Patch1:    0001-CDRIVER-2516-keep-25-free-in-platform-string.patch
+# Fix documentation build with sphinx >= 1.7
+# See: https://bugzilla.redhat.com/show_bug.cgi?id=1555204
+# Fixed upstream: https://github.com/mongodb/mongo-c-driver/commit/977b3e906a6dfe4709545cc35f93598d7fc04ffe
+Patch2:    fix-docs-build.patch
 
 BuildRequires: autoconf
 BuildRequires: automake
@@ -99,6 +103,7 @@ Documentation: http://api.mongodb.org/c/%{version}/
 %setup -q -n %{gh_project}-%{version}%{?prever:-dev}
 %patch0 -p1 -b .rpm
 %patch1 -p1 -b .2516
+%patch2 -p1 -b .docs
 
 : Generate build scripts from sources
 autoreconf --force --install --verbose -I build/autotools
@@ -198,6 +203,9 @@ exit $ret
 
 
 %changelog
+* Wed Mar 14 2018 Charalampos Stratakis <cstratak@redhat.com> - 1.9.3-2
+- Fix docs build with Sphinx >= 1.7
+
 * Thu Mar  1 2018 Remi Collet <remi@remirepo.net> - 1.9.3-1
 - update to 1.9.3
 
