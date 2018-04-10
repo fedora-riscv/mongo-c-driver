@@ -24,7 +24,7 @@
 
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
-Version:   1.9.3
+Version:   1.9.4
 Release:   1%{?dist}
 License:   ASL 2.0
 Group:     System Environment/Libraries
@@ -48,12 +48,7 @@ BuildRequires: openssl-devel
 BuildRequires: pkgconfig(libbson-1.0) > %{bsonver}
 BuildRequires: pkgconfig(libsasl2)
 BuildRequires: pkgconfig(zlib)
-%if 0%{?fedora} >= 26
-# pkgconfig file introduce in 1.1.4
 BuildRequires: pkgconfig(snappy)
-%else
-BuildRequires: snappy-devel
-%endif
 %if %{with_tests}
 BuildRequires: mongodb-server
 BuildRequires: openssl
@@ -87,6 +82,12 @@ Summary:    Header files and development libraries for %{name}
 Group:      Development/Libraries
 Requires:   %{name}%{?_isa} = %{version}-%{release}
 Requires:   pkgconfig
+# See https://jira.mongodb.org/browse/CDRIVER-2603
+Requires:   openssl-devel
+Requires:   pkgconfig(libbson-1.0) > %{bsonver}
+Requires:   pkgconfig(libsasl2)
+Requires:   pkgconfig(zlib)
+Requires:   pkgconfig(snappy)
 
 %description devel
 This package contains the header files and development libraries
@@ -201,6 +202,11 @@ exit $ret
 
 
 %changelog
+* Tue Apr 10 2018 Remi Collet <remi@remirepo.net> - 1.9.4-1
+- update to 1.9.4
+- ensure all libraries referenced in pkgconfig file are required by devel
+  reported as https://jira.mongodb.org/browse/CDRIVER-2603, #1560611
+
 * Thu Mar  1 2018 Remi Collet <remi@remirepo.net> - 1.9.3-1
 - update to 1.9.3
 
