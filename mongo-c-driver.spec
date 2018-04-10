@@ -24,8 +24,8 @@
 
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
-Version:   1.9.3
-Release:   2%{?dist}
+Version:   1.9.4
+Release:   1%{?dist}
 License:   ASL 2.0
 URL:       https://github.com/%{gh_owner}/%{gh_project}
 
@@ -40,10 +40,6 @@ Patch0:    %{name}-rpm.patch
 
 # See https://jira.mongodb.org/browse/CDRIVER-2516
 Patch1:    0001-CDRIVER-2516-keep-25-free-in-platform-string.patch
-# Fix documentation build with sphinx >= 1.7
-# See: https://bugzilla.redhat.com/show_bug.cgi?id=1555204
-# Fixed upstream: https://github.com/mongodb/mongo-c-driver/commit/977b3e906a6dfe4709545cc35f93598d7fc04ffe
-Patch2:    fix-docs-build.patch
 
 BuildRequires: autoconf
 BuildRequires: automake
@@ -54,12 +50,7 @@ BuildRequires: openssl-devel
 BuildRequires: pkgconfig(libbson-1.0) > %{bsonver}
 BuildRequires: pkgconfig(libsasl2)
 BuildRequires: pkgconfig(zlib)
-%if 0%{?fedora} >= 26
-# pkgconfig file introduce in 1.1.4
 BuildRequires: pkgconfig(snappy)
-%else
-BuildRequires: snappy-devel
-%endif
 %if %{with_tests}
 BuildRequires: mongodb-server
 BuildRequires: openssl
@@ -91,6 +82,12 @@ This package contains the shared libraries for %{name}.
 Summary:    Header files and development libraries for %{name}
 Requires:   %{name}%{?_isa} = %{version}-%{release}
 Requires:   pkgconfig
+# See https://jira.mongodb.org/browse/CDRIVER-2603
+Requires:   openssl-devel
+Requires:   pkgconfig(libbson-1.0) > %{bsonver}
+Requires:   pkgconfig(libsasl2)
+Requires:   pkgconfig(zlib)
+Requires:   pkgconfig(snappy)
 
 %description devel
 This package contains the header files and development libraries
@@ -103,7 +100,6 @@ Documentation: http://api.mongodb.org/c/%{version}/
 %setup -q -n %{gh_project}-%{version}%{?prever:-dev}
 %patch0 -p1 -b .rpm
 %patch1 -p1 -b .2516
-%patch2 -p1 -b .docs
 
 : Generate build scripts from sources
 autoreconf --force --install --verbose -I build/autotools
@@ -203,6 +199,11 @@ exit $ret
 
 
 %changelog
+* Tue Apr 10 2018 Remi Collet <remi@remirepo.net> - 1.9.4-1
+- update to 1.9.4
+- ensure all libraries referenced in pkgconfig file are required by devel
+  reported as https://jira.mongodb.org/browse/CDRIVER-2603, #1560611
+
 * Wed Mar 14 2018 Charalampos Stratakis <cstratak@redhat.com> - 1.9.3-2
 - Fix docs build with Sphinx >= 1.7
 
