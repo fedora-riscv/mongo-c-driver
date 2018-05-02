@@ -24,7 +24,7 @@
 
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
-Version:   1.9.4
+Version:   1.9.5
 Release:   1%{?dist}
 License:   ASL 2.0
 URL:       https://github.com/%{gh_owner}/%{gh_project}
@@ -199,6 +199,9 @@ exit $ret
 
 
 %changelog
+* Wed May  2 2018 Remi Collet <remi@remirepo.net> - 1.9.5-1
+- update to 1.9.5
+
 * Tue Apr 10 2018 Remi Collet <remi@remirepo.net> - 1.9.4-1
 - update to 1.9.4
 - ensure all libraries referenced in pkgconfig file are required by devel
