@@ -25,12 +25,15 @@
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
 Version:   1.10.0
-Release:   1%{?dist}
+Release:   2%{?dist}
 # See THIRD_PARTY_NOTICES
 License:   ASL 2.0 and ISC and MIT and zlib
 URL:       https://github.com/%{gh_owner}/%{gh_project}
 
 Source0:   https://github.com/%{gh_owner}/%{gh_project}/releases/download/%{version}%{?prever:-%{prever}}/%{gh_project}-%{version}%{?prever:-%{prever}}.tar.gz
+
+# https://jira.mongodb.org/browse/CDRIVER-2667
+Patch0:    498.patch
 
 BuildRequires: cmake >= 3.1
 BuildRequires: gcc
@@ -107,6 +110,7 @@ Documentation: http://mongoc.org/libbson/%{version}/
 
 %prep
 %setup -q -n %{gh_project}-%{version}%{?prever:-dev}
+%patch0 -p1 -b .2667
 
 
 %build
@@ -134,6 +138,7 @@ rm -rf %{buildroot}%{_libdir}/cmake/*static*
 rm -rf %{buildroot}%{_libdir}/pkgconfig/*static*
 
 # TODO investigate why not installed
+# reported as https://jira.mongodb.org/browse/CDRIVER-2668
 install -Dpm 755 src/libmongoc/mongoc-stat %{buildroot}%{_bindir}/mongoc-stat
 
 
@@ -198,6 +203,13 @@ exit $ret
 
 
 %changelog
+* Mon May 28 2018 Remi Collet <remi@remirepo.net> - 1.10.0-2
+- add patch from https://github.com/mongodb/mongo-c-driver/pull/498
+  for https://jira.mongodb.org/browse/CDRIVER-2667
+  "mongoc-stat is not supported on your platform"
+- open https://jira.mongodb.org/browse/CDRIVER-2668
+  "mongoc-stat build but not installed"
+
 * Mon May 28 2018 Remi Collet <remi@remirepo.net> - 1.10.0-1
 - update to 1.10.0
 - also build libbson and create new sub-packages
