@@ -24,30 +24,18 @@
 
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
-Version:   1.9.5
+Version:   1.10.0
 Release:   1%{?dist}
-License:   ASL 2.0
+# See THIRD_PARTY_NOTICES
+License:   ASL 2.0 and ISC and MIT and zlib
 URL:       https://github.com/%{gh_owner}/%{gh_project}
 
 Source0:   https://github.com/%{gh_owner}/%{gh_project}/releases/download/%{version}%{?prever:-%{prever}}/%{gh_project}-%{version}%{?prever:-%{prever}}.tar.gz
 
-# RPM specific changes
-# 1. Ignore check for libbson version = libmongoc version
-# 2. Use bundled libbson documentation
-#    https://jira.mongodb.org/browse/CDRIVER-2078
-# 3. Don't install COPYING file which is not doc but license
-Patch0:    %{name}-rpm.patch
-
-# See https://jira.mongodb.org/browse/CDRIVER-2516
-Patch1:    0001-CDRIVER-2516-keep-25-free-in-platform-string.patch
-
-BuildRequires: autoconf
-BuildRequires: automake
+BuildRequires: cmake >= 3.1
 BuildRequires: gcc
-BuildRequires: libtool
 # pkg-config may pull compat-openssl10
 BuildRequires: openssl-devel
-BuildRequires: pkgconfig(libbson-1.0) > %{bsonver}
 BuildRequires: pkgconfig(libsasl2)
 BuildRequires: pkgconfig(zlib)
 BuildRequires: pkgconfig(snappy)
@@ -82,75 +70,64 @@ This package contains the shared libraries for %{name}.
 Summary:    Header files and development libraries for %{name}
 Requires:   %{name}%{?_isa} = %{version}-%{release}
 Requires:   pkgconfig
-# See https://jira.mongodb.org/browse/CDRIVER-2603
-Requires:   openssl-devel
-Requires:   pkgconfig(libbson-1.0) > %{bsonver}
-Requires:   pkgconfig(libsasl2)
-Requires:   pkgconfig(zlib)
-Requires:   pkgconfig(snappy)
 
 %description devel
 This package contains the header files and development libraries
 for %{name}.
 
-Documentation: http://api.mongodb.org/c/%{version}/
+Documentation: http://mongoc.org/libmongoc/%{version}/
+
+
+%package -n libbson
+Summary:    Building, parsing, and iterating BSON documents
+
+%description -n libbson
+This is a library providing useful routines related to building, parsing,
+and iterating BSON documents <http://bsonspec.org/>.
+
+
+%package -n libbson-devel
+Summary:    Development files for %{name}
+Requires:   libbson%{?_isa} = %{version}-%{release}
+Requires:   pkgconfig
+
+%description -n libbson-devel
+This package contains libraries and header files needed for developing
+applications that use %{name}.
+
+Documentation: http://mongoc.org/libbson/%{version}/
 
 
 %prep
 %setup -q -n %{gh_project}-%{version}%{?prever:-dev}
-%patch0 -p1 -b .rpm
-%patch1 -p1 -b .2516
-
-: Generate build scripts from sources
-autoreconf --force --install --verbose -I build/autotools
-
-: delete bundled libbson sources
-rm -r src/libbson
 
 
 %build
-export LIBS=-lpthread
+%cmake \
+    -DENABLE_BSON:STRING=ON \
+    -DENABLE_MONGOC:BOOL=ON \
+    -DENABLE_SHM_COUNTERS:BOOL=ON \
+    -DENABLE_SSL:STRING=OPENSSL \
+    -DENABLE_SASL:STRING=CYRUS \
+    -DENABLE_AUTOMATIC_INIT_AND_CLEANUP:BOOL=OFF \
+    -DENABLE_CRYPTO_SYSTEM_PROFILE:BOOL=ON \
+    -DENABLE_MAN_PAGES:BOOL=ON \
+    -DENABLE_TESTS:BOOL=ON \
+    -DENABLE_EXAMPLES:BOOL=OFF
 
-%configure \
-  --enable-debug-symbols \
-  --enable-shm-counters \
-  --disable-automatic-init-and-cleanup \
-  --enable-crypto-system-profile \
-%if %{with_tests}
-  --enable-tests \
-%else
-  --disable-tests \
-%endif
-  --enable-sasl \
-  --enable-ssl \
-  --with-libbson=system \
-  --with-snappy=system \
-  --with-zlib=system \
-  --disable-html-docs \
-  --enable-examples \
-  --enable-man-pages
+make %{?_smp_mflags}
 
-rm -r src/zlib-*
-
-make %{?_smp_mflags} all V=1
-
-# Explicit man target is needed for generating manual pages
-make %{?_smp_mflags} doc/man V=1
 
 
 %install
 make install DESTDIR=%{buildroot}
 
-rm %{buildroot}%{_libdir}/*la
+rm -f  %{buildroot}%{_libdir}/*.a
+rm -rf %{buildroot}%{_libdir}/cmake/*static*
+rm -rf %{buildroot}%{_libdir}/pkgconfig/*static*
 
-: install examples
-for i in examples/*.c examples/*/*.c; do
-  install -Dpm 644 $i %{buildroot}%{_datadir}/doc/%{name}/$i
-done
-
-: Rename documentation to match subpackage name
-mv %{buildroot}%{_datadir}/doc/%{name} \
-   %{buildroot}%{_datadir}/doc/%{name}-devel
+# TODO investigate why not installed
+install -Dpm 755 src/libmongoc/mongoc-stat %{buildroot}%{_bindir}/mongoc-stat
 
 
 %check
@@ -190,15 +167,35 @@ exit $ret
 %{_libdir}/%{libname}-%{libver}.so.*
 
 %files devel
-%{_docdir}/%{name}-devel
+%doc src/%{libname}/examples
+%doc NEWS
 %{_includedir}/%{libname}-%{libver}
 %{_libdir}/%{libname}-%{libver}.so
 %{_libdir}/pkgconfig/%{libname}-*.pc
 %{_libdir}/cmake/%{libname}-%{libver}
 %{_mandir}/man3/mongoc*
 
+%files -n libbson
+%license COPYING
+%license THIRD_PARTY_NOTICES
+%{_libdir}/libbson*.so.*
+
+%files -n libbson-devel
+%doc src/libbson/examples
+%doc src/libbson/NEWS
+%{_includedir}/libbson-%{libver}
+%{_libdir}/libbson*.so
+%{_libdir}/cmake/libbson-%{libver}
+%{_libdir}/pkgconfig/libbson-*.pc
+%{_mandir}/man3/bson*
+
 
 %changelog
+* Mon May 28 2018 Remi Collet <remi@remirepo.net> - 1.10.0-1
+- update to 1.10.0
+- also build libbson and create new sub-packages
+- switch to cmake
+
 * Wed May  2 2018 Remi Collet <remi@remirepo.net> - 1.9.5-1
 - update to 1.9.5
 
