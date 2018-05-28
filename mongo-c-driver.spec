@@ -70,6 +70,7 @@ This package contains the shared libraries for %{name}.
 Summary:    Header files and development libraries for %{name}
 Requires:   %{name}%{?_isa} = %{version}-%{release}
 Requires:   pkgconfig
+Requires:   cmake-filesystem
 
 %description devel
 This package contains the header files and development libraries
@@ -80,6 +81,11 @@ Documentation: http://mongoc.org/libmongoc/%{version}/
 
 %package -n libbson
 Summary:    Building, parsing, and iterating BSON documents
+# Modified (with bson allocator and some warning fixes and huge indentation
+# refactoring) jsonsl is bundled <https://github.com/mnunberg/jsonsl>.
+# jsonsl upstream likes copylib approach and does not plan a release
+# <https://github.com/mnunberg/jsonsl/issues/14>.
+Provides:   bundled(jsonsl)
 
 %description -n libbson
 This is a library providing useful routines related to building, parsing,
@@ -90,6 +96,7 @@ and iterating BSON documents <http://bsonspec.org/>.
 Summary:    Development files for %{name}
 Requires:   libbson%{?_isa} = %{version}-%{release}
 Requires:   pkgconfig
+Requires:   cmake-filesystem
 
 %description -n libbson-devel
 This package contains libraries and header files needed for developing
