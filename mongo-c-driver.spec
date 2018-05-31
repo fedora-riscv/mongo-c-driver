@@ -24,16 +24,13 @@
 
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
-Version:   1.10.0
-Release:   2%{?dist}
+Version:   1.10.1
+Release:   1%{?dist}
 # See THIRD_PARTY_NOTICES
 License:   ASL 2.0 and ISC and MIT and zlib
 URL:       https://github.com/%{gh_owner}/%{gh_project}
 
 Source0:   https://github.com/%{gh_owner}/%{gh_project}/releases/download/%{version}%{?prever:-%{prever}}/%{gh_project}-%{version}%{?prever:-%{prever}}.tar.gz
-
-# https://jira.mongodb.org/browse/CDRIVER-2667
-Patch0:    498.patch
 
 BuildRequires: cmake >= 3.1
 BuildRequires: gcc
@@ -110,7 +107,6 @@ Documentation: http://mongoc.org/libbson/%{version}/
 
 %prep
 %setup -q -n %{gh_project}-%{version}%{?prever:-dev}
-%patch0 -p1 -b .2667
 
 
 %build
@@ -136,10 +132,6 @@ make install DESTDIR=%{buildroot}
 rm -f  %{buildroot}%{_libdir}/*.a
 rm -rf %{buildroot}%{_libdir}/cmake/*static*
 rm -rf %{buildroot}%{_libdir}/pkgconfig/*static*
-
-# TODO investigate why not installed
-# reported as https://jira.mongodb.org/browse/CDRIVER-2668
-install -Dpm 755 src/libmongoc/mongoc-stat %{buildroot}%{_bindir}/mongoc-stat
 
 
 %check
@@ -203,6 +195,9 @@ exit $ret
 
 
 %changelog
+* Thu May 31 2018 Remi Collet <remi@remirepo.net> - 1.10.1-1
+- update to 1.10.1
+
 * Mon May 28 2018 Remi Collet <remi@remirepo.net> - 1.10.0-2
 - add patch from https://github.com/mongodb/mongo-c-driver/pull/498
   for https://jira.mongodb.org/browse/CDRIVER-2667
