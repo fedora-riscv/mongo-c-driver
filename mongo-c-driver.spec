@@ -24,7 +24,7 @@
 
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
-Version:   1.10.3
+Version:   1.11.0
 Release:   1%{?dist}
 # See THIRD_PARTY_NOTICES
 License:   ASL 2.0 and ISC and MIT and zlib
@@ -39,6 +39,7 @@ BuildRequires: openssl-devel
 BuildRequires: pkgconfig(libsasl2)
 BuildRequires: pkgconfig(zlib)
 BuildRequires: pkgconfig(snappy)
+BuildRequires: pkgconfig(icu-uc)
 %if %{with_tests}
 BuildRequires: mongodb-server
 BuildRequires: openssl
@@ -116,6 +117,7 @@ Documentation: http://mongoc.org/libbson/%{version}/
     -DENABLE_SHM_COUNTERS:BOOL=ON \
     -DENABLE_SSL:STRING=OPENSSL \
     -DENABLE_SASL:STRING=CYRUS \
+    -DENABLE_ICU:STRING=ON \
     -DENABLE_AUTOMATIC_INIT_AND_CLEANUP:BOOL=OFF \
     -DENABLE_CRYPTO_SYSTEM_PROFILE:BOOL=ON \
     -DENABLE_MAN_PAGES:BOOL=ON \
@@ -195,6 +197,10 @@ exit $ret
 
 
 %changelog
+* Sat Jun 23 2018 Remi Collet <remi@remirepo.net> - 1.11.0-1
+- update to 1.11.0
+- add dependency on libicu
+
 * Wed Jun 20 2018 Remi Collet <remi@remirepo.net> - 1.10.3-1
 - update to 1.10.3
 
