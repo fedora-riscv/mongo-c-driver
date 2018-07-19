@@ -13,7 +13,9 @@
 #global prever       rc2
 %global bsonver      1.9
 
-%if 0%{?__isa_bits} == 64
+#if 0#{?__isa_bits} == 64
+# see https://bugzilla.redhat.com/1603062
+%ifarch x86_64
 %global with_tests   0%{!?_without_tests:1}
 %else
 # See https://jira.mongodb.org/browse/CDRIVER-1186
