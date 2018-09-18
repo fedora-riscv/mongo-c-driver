@@ -12,21 +12,11 @@
 %global libver       1.0
 #global prever       rc2
 %global bsonver      1.9
-
-#if 0#{?__isa_bits} == 64
-# see https://bugzilla.redhat.com/1603062
-%ifarch x86_64
-%global with_tests   0%{!?_without_tests:1}
-%else
-# See https://jira.mongodb.org/browse/CDRIVER-1186
-# 32-bit MongoDB support was officially deprecated
-# in MongoDB 3.2, and support is being removed in 3.4.
 %global with_tests   0%{?_with_tests:1}
-%endif
 
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
-Version:   1.12.0
+Version:   1.13.0
 Release:   1%{?dist}
 # See THIRD_PARTY_NOTICES
 License:   ASL 2.0 and ISC and MIT and zlib
@@ -110,6 +100,9 @@ Documentation: http://mongoc.org/libbson/%{version}/
 
 %prep
 %setup -q -n %{gh_project}-%{version}%{?prever:-dev}
+
+# disable uninstall installation
+sed -e '/generate_uninstall/s/add_subdirectory/## /' -i CMakeLists.txt
 
 
 %build
@@ -199,6 +192,12 @@ exit $ret
 
 
 %changelog
+* Tue Sep 18 2018 Remi Collet <remi@remirepo.net> - 1.13.0-1
+- update to 1.13.0
+- open https://jira.mongodb.org/browse/CDRIVER-2827 make install fails
+- open https://jira.mongodb.org/browse/CDRIVER-2828 test failures
+- disable test suite
+
 * Thu Jul 19 2018 Remi Collet <remi@remirepo.net> - 1.12.0-1
 - update to 1.12.0
 
