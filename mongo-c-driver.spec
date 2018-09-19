@@ -12,12 +12,19 @@
 %global libver       1.0
 #global prever       rc2
 %global bsonver      1.9
+%if 0%{?__isa_bits} == 64
+%global with_tests   0%{!?_without_tests:1}
+%else
+# See https://jira.mongodb.org/browse/CDRIVER-1186
+# 32-bit MongoDB support was officially deprecated
+# in MongoDB 3.2, and support is being removed in 3.4.
 %global with_tests   0%{?_with_tests:1}
+%endif
 
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
 Version:   1.13.0
-Release:   1%{?dist}
+Release:   2%{?dist}
 # See THIRD_PARTY_NOTICES
 License:   ASL 2.0 and ISC and MIT and zlib
 URL:       https://github.com/%{gh_owner}/%{gh_project}
@@ -147,6 +154,7 @@ mongod \
 : Run the test suite
 ret=0
 export MONGOC_TEST_OFFLINE=on
+export MONGOC_TEST_SKIP_MOCK=on
 #export MONGOC_TEST_SKIP_SLOW=on
 
 make check || ret=1
@@ -192,6 +200,10 @@ exit $ret
 
 
 %changelog
+* Wed Sep 19 2018 Remi Collet <remi@remirepo.net> - 1.13.0-2
+- enable test suite on all 64-bit arches
+  but skip tests relying on the mock server
+
 * Tue Sep 18 2018 Remi Collet <remi@remirepo.net> - 1.13.0-1
 - update to 1.13.0
 - open https://jira.mongodb.org/browse/CDRIVER-2827 make install fails
