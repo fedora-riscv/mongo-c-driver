@@ -24,7 +24,7 @@
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
 Version:   1.13.0
-Release:   2%{?dist}
+Release:   3%{?dist}
 # See THIRD_PARTY_NOTICES
 License:   ASL 2.0 and ISC and MIT and zlib
 URL:       https://github.com/%{gh_owner}/%{gh_project}
@@ -124,7 +124,8 @@ sed -e '/generate_uninstall/s/add_subdirectory/## /' -i CMakeLists.txt
     -DENABLE_CRYPTO_SYSTEM_PROFILE:BOOL=ON \
     -DENABLE_MAN_PAGES:BOOL=ON \
     -DENABLE_TESTS:BOOL=ON \
-    -DENABLE_EXAMPLES:BOOL=OFF
+    -DENABLE_EXAMPLES:BOOL=OFF \
+    .
 
 make %{?_smp_mflags}
 
@@ -200,6 +201,9 @@ exit $ret
 
 
 %changelog
+* Wed Jan 23 2019 Björn Esser <besser82@fedoraproject.org> - 1.13.0-3
+- Append curdir to CMake invokation. (#1668512)
+
 * Wed Sep 19 2018 Remi Collet <remi@remirepo.net> - 1.13.0-2
 - enable test suite on all 64-bit arches
   but skip tests relying on the mock server
