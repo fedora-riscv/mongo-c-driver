@@ -24,7 +24,7 @@
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
 Version:   1.13.0
-Release:   3%{?dist}
+Release:   4%{?dist}
 # See THIRD_PARTY_NOTICES
 License:   ASL 2.0 and ISC and MIT and zlib
 URL:       https://github.com/%{gh_owner}/%{gh_project}
@@ -201,6 +201,9 @@ exit $ret
 
 
 %changelog
+* Wed Jan 23 2019 Pete Walter <pwalter@fedoraproject.org> - 1.13.0-4
+- Rebuild for ICU 63
+
 * Wed Jan 23 2019 Björn Esser <besser82@fedoraproject.org> - 1.13.0-3
 - Append curdir to CMake invokation. (#1668512)
 
