@@ -1,6 +1,6 @@
 # remirepo/fedora spec file for mongo-c-driver
 #
-# Copyright (c) 2015-2018 Remi Collet
+# Copyright (c) 2015-2019 Remi Collet
 # License: CC-BY-SA
 # http://creativecommons.org/licenses/by-sa/4.0/
 #
@@ -12,19 +12,13 @@
 %global libver       1.0
 #global prever       rc2
 %global bsonver      1.9
-%if 0%{?__isa_bits} == 64
-%global with_tests   0%{!?_without_tests:1}
-%else
-# See https://jira.mongodb.org/browse/CDRIVER-1186
-# 32-bit MongoDB support was officially deprecated
-# in MongoDB 3.2, and support is being removed in 3.4.
+# disabled as require a MongoDB server
 %global with_tests   0%{?_with_tests:1}
-%endif
 
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
-Version:   1.13.0
-Release:   4%{?dist}
+Version:   1.13.1
+Release:   1%{?dist}
 # See THIRD_PARTY_NOTICES
 License:   ASL 2.0 and ISC and MIT and zlib
 URL:       https://github.com/%{gh_owner}/%{gh_project}
@@ -108,9 +102,6 @@ Documentation: http://mongoc.org/libbson/%{version}/
 %prep
 %setup -q -n %{gh_project}-%{version}%{?prever:-dev}
 
-# disable uninstall installation
-sed -e '/generate_uninstall/s/add_subdirectory/## /' -i CMakeLists.txt
-
 
 %build
 %cmake \
@@ -125,6 +116,7 @@ sed -e '/generate_uninstall/s/add_subdirectory/## /' -i CMakeLists.txt
     -DENABLE_MAN_PAGES:BOOL=ON \
     -DENABLE_TESTS:BOOL=ON \
     -DENABLE_EXAMPLES:BOOL=OFF \
+    -DENABLE_UNINSTALL:BOOL=OFF \
     .
 
 make %{?_smp_mflags}
@@ -201,6 +193,10 @@ exit $ret
 
 
 %changelog
+* Thu Jan 31 2019 Remi Collet <remi@remirepo.net> - 1.13.1-1
+- update to 1.13.1
+- disable test suite, as MongoDB server is required
+
 * Wed Jan 23 2019 Pete Walter <pwalter@fedoraproject.org> - 1.13.0-4
 - Rebuild for ICU 63
 
