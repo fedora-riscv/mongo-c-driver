@@ -17,7 +17,7 @@
 
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
-Version:   1.13.1
+Version:   1.14.0
 Release:   1%{?dist}
 # See THIRD_PARTY_NOTICES
 License:   ASL 2.0 and ISC and MIT and zlib
@@ -126,9 +126,12 @@ make %{?_smp_mflags}
 %install
 make install DESTDIR=%{buildroot}
 
+: Static library
 rm -f  %{buildroot}%{_libdir}/*.a
 rm -rf %{buildroot}%{_libdir}/cmake/*static*
 rm -rf %{buildroot}%{_libdir}/pkgconfig/*static*
+: Documentation
+rm -rf %{buildroot}%{_datadir}/%{name}
 
 
 %check
@@ -193,6 +196,9 @@ exit $ret
 
 
 %changelog
+* Mon Feb 25 2019 Remi Collet <remi@remirepo.net> - 1.14.0-1
+- update to 1.14.0
+
 * Thu Jan 31 2019 Remi Collet <remi@remirepo.net> - 1.13.1-1
 - update to 1.13.1
 - disable test suite, as MongoDB server is required
