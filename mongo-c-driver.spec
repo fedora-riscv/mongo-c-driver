@@ -17,8 +17,8 @@
 
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
-Version:   1.14.0
-Release:   2%{?dist}
+Version:   1.15.0
+Release:   1%{?dist}
 # See THIRD_PARTY_NOTICES
 License:   ASL 2.0 and ISC and MIT and zlib
 URL:       https://github.com/%{gh_owner}/%{gh_project}
@@ -33,13 +33,17 @@ BuildRequires: pkgconfig(libsasl2)
 BuildRequires: pkgconfig(zlib)
 BuildRequires: pkgconfig(snappy)
 BuildRequires: pkgconfig(icu-uc)
+%if 0%{?fedora}
+# See https://bugzilla.redhat.com/1743983
+BuildRequires: pkgconfig(libzstd)
+%endif
 %if %{with_tests}
 BuildRequires: mongodb-server
 BuildRequires: openssl
 %endif
 BuildRequires: perl-interpreter
 # From man pages
-BuildRequires: python
+BuildRequires: python3
 BuildRequires: /usr/bin/sphinx-build
 
 Requires:   %{name}-libs%{?_isa} = %{version}-%{release}
@@ -196,6 +200,11 @@ exit $ret
 
 
 %changelog
+* Wed Aug 21 2019 Remi Collet <remi@remirepo.net> - 1.15.0-1
+- update to 1.15.0
+- add zstd compression support on Fedora
+- use python3 during the build
+
 * Thu Jul 25 2019 Fedora Release Engineering <releng@fedoraproject.org> - 1.14.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_31_Mass_Rebuild
 
