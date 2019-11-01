@@ -18,7 +18,7 @@
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
 Version:   1.15.1
-Release:   1%{?dist}
+Release:   2%{?dist}
 # See THIRD_PARTY_NOTICES
 License:   ASL 2.0 and ISC and MIT and zlib
 URL:       https://github.com/%{gh_owner}/%{gh_project}
@@ -200,6 +200,9 @@ exit $ret
 
 
 %changelog
+* Fri Nov 01 2019 Pete Walter <pwalter@fedoraproject.org> - 1.15.1-2
+- Rebuild for ICU 65
+
 * Mon Sep  2 2019 Remi Collet <remi@remirepo.net> - 1.15.1-1
 - update to 1.15.1
 
