@@ -17,7 +17,7 @@
 
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
-Version:   1.15.2
+Version:   1.15.3
 Release:   1%{?dist}
 # See THIRD_PARTY_NOTICES
 License:   ASL 2.0 and ISC and MIT and zlib
@@ -197,6 +197,9 @@ exit $ret
 
 
 %changelog
+* Wed Dec 18 2019 Remi Collet <remi@remirepo.net> - 1.15.3-1
+- update to 1.15.3
+
 * Thu Nov  7 2019 Remi Collet <remi@remirepo.net> - 1.15.2-1
 - update to 1.15.2
 - add zstd compression support on EL-8
