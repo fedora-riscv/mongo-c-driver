@@ -1,6 +1,6 @@
 # remirepo/fedora spec file for mongo-c-driver
 #
-# Copyright (c) 2015-2019 Remi Collet
+# Copyright (c) 2015-2020 Remi Collet
 # License: CC-BY-SA
 # http://creativecommons.org/licenses/by-sa/4.0/
 #
@@ -14,10 +14,12 @@
 %global bsonver      1.9
 # disabled as require a MongoDB server
 %global with_tests   0%{?_with_tests:1}
+# waiting for review #1792224
+%global with_crypto  0
 
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
-Version:   1.15.3
+Version:   1.16.0
 Release:   1%{?dist}
 # See THIRD_PARTY_NOTICES
 License:   ASL 2.0 and ISC and MIT and zlib
@@ -37,6 +39,9 @@ BuildRequires: pkgconfig(libzstd)
 %if %{with_tests}
 BuildRequires: mongodb-server
 BuildRequires: openssl
+%endif
+%if %{with_crypto}
+BuildRequires: cmake(mongocrypt)
 %endif
 BuildRequires: perl-interpreter
 # From man pages
@@ -118,6 +123,11 @@ Documentation: http://mongoc.org/libbson/%{version}/
     -DENABLE_TESTS:BOOL=ON \
     -DENABLE_EXAMPLES:BOOL=OFF \
     -DENABLE_UNINSTALL:BOOL=OFF \
+%if %{with_crypto}
+    -DENABLE_CLIENT_SIDE_ENCRYPTION:BOOL=ON \
+%else
+    -DENABLE_CLIENT_SIDE_ENCRYPTION:BOOL=OFF \
+%endif
     .
 
 make %{?_smp_mflags}
@@ -179,6 +189,7 @@ exit $ret
 %{_libdir}/%{libname}-%{libver}.so
 %{_libdir}/pkgconfig/%{libname}-*.pc
 %{_libdir}/cmake/%{libname}-%{libver}
+%{_libdir}/cmake/mongoc-%{libver}
 %{_mandir}/man3/mongoc*
 
 %files -n libbson
@@ -192,11 +203,16 @@ exit $ret
 %{_includedir}/libbson-%{libver}
 %{_libdir}/libbson*.so
 %{_libdir}/cmake/libbson-%{libver}
+%{_libdir}/cmake/bson-%{libver}
 %{_libdir}/pkgconfig/libbson-*.pc
 %{_mandir}/man3/bson*
 
 
 %changelog
+* Fri Jan 17 2020 Remi Collet <remi@remirepo.net> - 1.16.0-1
+- update to 1.16.0
+- disable client side encryption until #1792224 is approved
+
 * Wed Dec 18 2019 Remi Collet <remi@remirepo.net> - 1.15.3-1
 - update to 1.15.3
 
