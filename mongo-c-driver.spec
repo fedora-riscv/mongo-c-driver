@@ -1,6 +1,6 @@
 # remirepo/fedora spec file for mongo-c-driver
 #
-# Copyright (c) 2015-2019 Remi Collet
+# Copyright (c) 2015-2020 Remi Collet
 # License: CC-BY-SA
 # http://creativecommons.org/licenses/by-sa/4.0/
 #
@@ -17,8 +17,8 @@
 
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
-Version:   1.15.3
-Release:   1%{?dist}
+Version:   1.16.0
+Release:   3%{?dist}
 # See THIRD_PARTY_NOTICES
 License:   ASL 2.0 and ISC and MIT and zlib
 URL:       https://github.com/%{gh_owner}/%{gh_project}
@@ -38,6 +38,7 @@ BuildRequires: pkgconfig(libzstd)
 BuildRequires: mongodb-server
 BuildRequires: openssl
 %endif
+BuildRequires: cmake(mongocrypt)
 BuildRequires: perl-interpreter
 # From man pages
 BuildRequires: python3
@@ -115,9 +116,15 @@ Documentation: http://mongoc.org/libbson/%{version}/
     -DENABLE_AUTOMATIC_INIT_AND_CLEANUP:BOOL=OFF \
     -DENABLE_CRYPTO_SYSTEM_PROFILE:BOOL=ON \
     -DENABLE_MAN_PAGES:BOOL=ON \
+%if %{with_tests}
     -DENABLE_TESTS:BOOL=ON \
+%else
+    -DENABLE_STATIC:BOOL=OFF \
+    -DENABLE_TESTS:BOOL=OFF \
+%endif
     -DENABLE_EXAMPLES:BOOL=OFF \
     -DENABLE_UNINSTALL:BOOL=OFF \
+    -DENABLE_CLIENT_SIDE_ENCRYPTION:BOOL=ON \
     .
 
 make %{?_smp_mflags}
@@ -136,6 +143,8 @@ rm -rf %{buildroot}%{_datadir}/%{name}
 
 
 %check
+ret=0
+
 %if %{with_tests}
 : Run a server
 mkdir dbtest
@@ -149,7 +158,6 @@ mongod \
   --fork
 
 : Run the test suite
-ret=0
 export MONGOC_TEST_OFFLINE=on
 export MONGOC_TEST_SKIP_MOCK=on
 #export MONGOC_TEST_SKIP_SLOW=on
@@ -158,9 +166,14 @@ make check || ret=1
 
 : Cleanup
 [ -s server.pid ] && kill $(cat server.pid)
-
-exit $ret
 %endif
+
+if grep -r static %{buildroot}%{_libdir}/cmake; then
+  : cmake configuration file contain reference to static library
+  ret=1
+fi
+exit $ret
+
 
 
 %files
@@ -179,6 +192,7 @@ exit $ret
 %{_libdir}/%{libname}-%{libver}.so
 %{_libdir}/pkgconfig/%{libname}-*.pc
 %{_libdir}/cmake/%{libname}-%{libver}
+%{_libdir}/cmake/mongoc-%{libver}
 %{_mandir}/man3/mongoc*
 
 %files -n libbson
@@ -192,11 +206,19 @@ exit $ret
 %{_includedir}/libbson-%{libver}
 %{_libdir}/libbson*.so
 %{_libdir}/cmake/libbson-%{libver}
+%{_libdir}/cmake/bson-%{libver}
 %{_libdir}/pkgconfig/libbson-*.pc
 %{_mandir}/man3/bson*
 
 
 %changelog
+* Tue Jan 21 2020 Remi Collet <remi@remirepo.net> - 1.16.0-3
+- update to 1.16.0
+- enable client side encryption
+- add dependency to libmongocrypt
+- clean reference to static library in cmake files
+  see https://jira.mongodb.org/browse/CDRIVER-3495
+
 * Wed Dec 18 2019 Remi Collet <remi@remirepo.net> - 1.15.3-1
 - update to 1.15.3
 
