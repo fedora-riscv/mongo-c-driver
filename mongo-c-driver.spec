@@ -222,6 +222,7 @@ exit $ret
 %changelog
 * Sat Jan 18 2020 Remi Collet <remi@remirepo.net> - 1.16.0-2
 - clean reference to static library in cmake files
+- see https://jira.mongodb.org/browse/CDRIVER-3495
 
 * Fri Jan 17 2020 Remi Collet <remi@remirepo.net> - 1.16.0-1
 - update to 1.16.0
