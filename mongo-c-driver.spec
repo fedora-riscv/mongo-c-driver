@@ -20,7 +20,7 @@
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
 Version:   1.16.0
-Release:   1%{?dist}
+Release:   2%{?dist}
 # See THIRD_PARTY_NOTICES
 License:   ASL 2.0 and ISC and MIT and zlib
 URL:       https://github.com/%{gh_owner}/%{gh_project}
@@ -120,7 +120,12 @@ Documentation: http://mongoc.org/libbson/%{version}/
     -DENABLE_AUTOMATIC_INIT_AND_CLEANUP:BOOL=OFF \
     -DENABLE_CRYPTO_SYSTEM_PROFILE:BOOL=ON \
     -DENABLE_MAN_PAGES:BOOL=ON \
+%if %{with_tests}
     -DENABLE_TESTS:BOOL=ON \
+%else
+    -DENABLE_STATIC:BOOL=OFF \
+    -DENABLE_TESTS:BOOL=OFF \
+%endif
     -DENABLE_EXAMPLES:BOOL=OFF \
     -DENABLE_UNINSTALL:BOOL=OFF \
 %if %{with_crypto}
@@ -146,6 +151,8 @@ rm -rf %{buildroot}%{_datadir}/%{name}
 
 
 %check
+ret=0
+
 %if %{with_tests}
 : Run a server
 mkdir dbtest
@@ -159,7 +166,6 @@ mongod \
   --fork
 
 : Run the test suite
-ret=0
 export MONGOC_TEST_OFFLINE=on
 export MONGOC_TEST_SKIP_MOCK=on
 #export MONGOC_TEST_SKIP_SLOW=on
@@ -168,9 +174,14 @@ make check || ret=1
 
 : Cleanup
 [ -s server.pid ] && kill $(cat server.pid)
-
-exit $ret
 %endif
+
+if grep -r static %{buildroot}%{_libdir}/cmake; then
+  : cmake configuration file contain reference to static library
+  ret=1
+fi
+exit $ret
+
 
 
 %files
@@ -209,6 +220,9 @@ exit $ret
 
 
 %changelog
+* Sat Jan 18 2020 Remi Collet <remi@remirepo.net> - 1.16.0-2
+- clean reference to static library in cmake files
+
 * Fri Jan 17 2020 Remi Collet <remi@remirepo.net> - 1.16.0-1
 - update to 1.16.0
 - disable client side encryption until #1792224 is approved
