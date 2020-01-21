@@ -14,13 +14,11 @@
 %global bsonver      1.9
 # disabled as require a MongoDB server
 %global with_tests   0%{?_with_tests:1}
-# waiting for review #1792224
-%global with_crypto  0
 
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
 Version:   1.16.0
-Release:   2%{?dist}
+Release:   3%{?dist}
 # See THIRD_PARTY_NOTICES
 License:   ASL 2.0 and ISC and MIT and zlib
 URL:       https://github.com/%{gh_owner}/%{gh_project}
@@ -40,9 +38,7 @@ BuildRequires: pkgconfig(libzstd)
 BuildRequires: mongodb-server
 BuildRequires: openssl
 %endif
-%if %{with_crypto}
 BuildRequires: cmake(mongocrypt)
-%endif
 BuildRequires: perl-interpreter
 # From man pages
 BuildRequires: python3
@@ -128,11 +124,7 @@ Documentation: http://mongoc.org/libbson/%{version}/
 %endif
     -DENABLE_EXAMPLES:BOOL=OFF \
     -DENABLE_UNINSTALL:BOOL=OFF \
-%if %{with_crypto}
     -DENABLE_CLIENT_SIDE_ENCRYPTION:BOOL=ON \
-%else
-    -DENABLE_CLIENT_SIDE_ENCRYPTION:BOOL=OFF \
-%endif
     .
 
 make %{?_smp_mflags}
@@ -220,6 +212,10 @@ exit $ret
 
 
 %changelog
+* Tue Jan 21 2020 Remi Collet <remi@remirepo.net> - 1.16.0-3
+- enable client side encryption
+- add dependency to libmongocrypt
+
 * Sat Jan 18 2020 Remi Collet <remi@remirepo.net> - 1.16.0-2
 - clean reference to static library in cmake files
 - see https://jira.mongodb.org/browse/CDRIVER-3495
