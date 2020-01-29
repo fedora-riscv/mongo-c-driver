@@ -18,7 +18,7 @@
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
 Version:   1.16.0
-Release:   3%{?dist}
+Release:   4%{?dist}
 # See THIRD_PARTY_NOTICES
 License:   ASL 2.0 and ISC and MIT and zlib
 URL:       https://github.com/%{gh_owner}/%{gh_project}
@@ -212,6 +212,9 @@ exit $ret
 
 
 %changelog
+* Wed Jan 29 2020 Fedora Release Engineering <releng@fedoraproject.org> - 1.16.0-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_32_Mass_Rebuild
+
 * Tue Jan 21 2020 Remi Collet <remi@remirepo.net> - 1.16.0-3
 - enable client side encryption
 - add dependency to libmongocrypt
