@@ -17,8 +17,8 @@
 
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
-Version:   1.16.1
-Release:   1%{?dist}
+Version:   1.16.2
+Release:   2%{?dist}
 # See THIRD_PARTY_NOTICES
 License:   ASL 2.0 and ISC and MIT and zlib
 URL:       https://github.com/%{gh_owner}/%{gh_project}
@@ -67,6 +67,8 @@ Summary:    Header files and development libraries for %{name}
 Requires:   %{name}%{?_isa} = %{version}-%{release}
 Requires:   pkgconfig
 Requires:   cmake-filesystem
+Requires:   pkgconfig(libzstd)
+Requires:   cmake(mongocrypt)
 
 %description devel
 This package contains the header files and development libraries
@@ -212,6 +214,10 @@ exit $ret
 
 
 %changelog
+* Mon Mar 09 2020 Honza Horak <hhorak@redhat.com> - 1.16.2-2
+- Add missing devel libraries to the mongo-c-driver devel sub-package,
+  so depended packages find them
+
 * Tue Feb  4 2020 Remi Collet <remi@remirepo.net> - 1.16.1-1
 - update to 1.16.1
 
