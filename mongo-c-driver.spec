@@ -10,20 +10,22 @@
 %global gh_project   mongo-c-driver
 %global libname      libmongoc
 %global libver       1.0
-#global prever       rc2
-%global bsonver      1.9
+%global up_version   1.17.0
+%global up_prever    beta
 # disabled as require a MongoDB server
 %global with_tests   0%{?_with_tests:1}
 
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
-Version:   1.16.2
-Release:   2%{?dist}
+Version:   %{up_version}%{?up_prever:~%{up_prever}}
+Release:   1%{?dist}
 # See THIRD_PARTY_NOTICES
 License:   ASL 2.0 and ISC and MIT and zlib
 URL:       https://github.com/%{gh_owner}/%{gh_project}
 
-Source0:   https://github.com/%{gh_owner}/%{gh_project}/releases/download/%{version}%{?prever:-%{prever}}/%{gh_project}-%{version}%{?prever:-%{prever}}.tar.gz
+Source0:   https://github.com/%{gh_owner}/%{gh_project}/releases/download/%{up_version}%{?up_prever:-%{up_prever}}/%{gh_project}-%{up_version}%{?up_prever:-%{up_prever}}.tar.gz
+
+Patch0:    https://patch-diff.githubusercontent.com/raw/mongodb/mongo-c-driver/pull/600.patch
 
 BuildRequires: cmake >= 3.1
 BuildRequires: gcc
@@ -104,7 +106,8 @@ Documentation: http://mongoc.org/libbson/%{version}/
 
 
 %prep
-%setup -q -n %{gh_project}-%{version}%{?prever:-dev}
+%setup -q -n %{gh_project}-%{up_version}%{?up_prever:-%{up_prever}}
+%patch0 -p1 -b .pr600
 
 
 %build
@@ -114,14 +117,15 @@ Documentation: http://mongoc.org/libbson/%{version}/
     -DENABLE_SHM_COUNTERS:BOOL=ON \
     -DENABLE_SSL:STRING=OPENSSL \
     -DENABLE_SASL:STRING=CYRUS \
+    -DENABLE_MONGODB_AWS_AUTH:STRING=ON \
     -DENABLE_ICU:STRING=ON \
     -DENABLE_AUTOMATIC_INIT_AND_CLEANUP:BOOL=OFF \
     -DENABLE_CRYPTO_SYSTEM_PROFILE:BOOL=ON \
     -DENABLE_MAN_PAGES:BOOL=ON \
+    -DENABLE_STATIC:STRING=OFF \
 %if %{with_tests}
     -DENABLE_TESTS:BOOL=ON \
 %else
-    -DENABLE_STATIC:BOOL=OFF \
     -DENABLE_TESTS:BOOL=OFF \
 %endif
     -DENABLE_EXAMPLES:BOOL=OFF \
@@ -214,6 +218,11 @@ exit $ret
 
 
 %changelog
+* Wed Apr 15 2020 Remi Collet <remi@remirepo.net> - 1.17.0~beta-1
+- update to 1.17.0-beta
+- fix cmake for static lilbraries using patch from
+  https://github.com/mongodb/mongo-c-driver/pull/600
+
 * Mon Mar 09 2020 Honza Horak <hhorak@redhat.com> - 1.16.2-2
 - Add missing devel libraries to the mongo-c-driver devel sub-package,
   so depended packages find them
