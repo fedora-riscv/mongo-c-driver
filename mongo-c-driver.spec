@@ -18,7 +18,7 @@
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
 Version:   %{up_version}%{?up_prever:~%{up_prever}}
-Release:   1%{?dist}
+Release:   2%{?dist}
 # See THIRD_PARTY_NOTICES
 License:   ASL 2.0 and ISC and MIT and zlib
 URL:       https://github.com/%{gh_owner}/%{gh_project}
@@ -218,6 +218,9 @@ exit $ret
 
 
 %changelog
+* Fri May 15 2020 Pete Walter <pwalter@fedoraproject.org> - 1.17.0~beta-2
+- Rebuild for ICU 67
+
 * Wed Apr 15 2020 Remi Collet <remi@remirepo.net> - 1.17.0~beta-1
 - update to 1.17.0-beta
 - fix cmake for static lilbraries using patch from
