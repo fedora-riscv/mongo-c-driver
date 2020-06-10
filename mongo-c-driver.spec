@@ -11,21 +11,19 @@
 %global libname      libmongoc
 %global libver       1.0
 %global up_version   1.17.0
-%global up_prever    beta
+%global up_prever    beta2
 # disabled as require a MongoDB server
 %global with_tests   0%{?_with_tests:1}
 
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
 Version:   %{up_version}%{?up_prever:~%{up_prever}}
-Release:   2%{?dist}
+Release:   1%{?dist}
 # See THIRD_PARTY_NOTICES
 License:   ASL 2.0 and ISC and MIT and zlib
 URL:       https://github.com/%{gh_owner}/%{gh_project}
 
 Source0:   https://github.com/%{gh_owner}/%{gh_project}/releases/download/%{up_version}%{?up_prever:-%{up_prever}}/%{gh_project}-%{up_version}%{?up_prever:-%{up_prever}}.tar.gz
-
-Patch0:    https://patch-diff.githubusercontent.com/raw/mongodb/mongo-c-driver/pull/600.patch
 
 BuildRequires: cmake >= 3.1
 BuildRequires: gcc
@@ -107,7 +105,6 @@ Documentation: http://mongoc.org/libbson/%{version}/
 
 %prep
 %setup -q -n %{gh_project}-%{up_version}%{?up_prever:-%{up_prever}}
-%patch0 -p1 -b .pr600
 
 
 %build
@@ -218,6 +215,10 @@ exit $ret
 
 
 %changelog
+* Wed Jun 10 2020 Remi Collet <remi@remirepo.net> - 1.17.0~beta2-1
+- update to 1.17.0-beta2
+- drop patch merged upstream
+
 * Fri May 15 2020 Pete Walter <pwalter@fedoraproject.org> - 1.17.0~beta-2
 - Rebuild for ICU 67
 
