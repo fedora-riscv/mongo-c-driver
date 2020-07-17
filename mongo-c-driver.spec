@@ -11,14 +11,14 @@
 %global libname      libmongoc
 %global libver       1.0
 %global up_version   1.17.0
-%global up_prever    beta2
+%global up_prever    rc0
 # disabled as require a MongoDB server
-%global with_tests   0%{?_with_tests:1}
+%bcond_with          tests
 
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
 Version:   %{up_version}%{?up_prever:~%{up_prever}}
-Release:   2%{?dist}
+Release:   1%{?dist}
 # See THIRD_PARTY_NOTICES
 License:   ASL 2.0 and ISC and MIT and zlib
 URL:       https://github.com/%{gh_owner}/%{gh_project}
@@ -34,7 +34,7 @@ BuildRequires: pkgconfig(zlib)
 BuildRequires: pkgconfig(snappy)
 BuildRequires: pkgconfig(icu-uc)
 BuildRequires: pkgconfig(libzstd)
-%if %{with_tests}
+%if %{with tests}
 BuildRequires: mongodb-server
 BuildRequires: openssl
 %endif
@@ -120,7 +120,7 @@ Documentation: http://mongoc.org/libbson/%{version}/
     -DENABLE_CRYPTO_SYSTEM_PROFILE:BOOL=ON \
     -DENABLE_MAN_PAGES:BOOL=ON \
     -DENABLE_STATIC:STRING=OFF \
-%if %{with_tests}
+%if %{with tests}
     -DENABLE_TESTS:BOOL=ON \
 %else
     -DENABLE_TESTS:BOOL=OFF \
@@ -148,7 +148,7 @@ rm -rf %{buildroot}%{_datadir}/%{name}
 %check
 ret=0
 
-%if %{with_tests}
+%if %{with tests}
 : Run a server
 mkdir dbtest
 mongod \
@@ -215,6 +215,9 @@ exit $ret
 
 
 %changelog
+* Fri Jul 17 2020 Remi Collet <remi@remirepo.net> - 1.17.0~rc0-1
+- update to 1.17.0-rc0
+
 * Thu Jun 11 2020 Remi Collet <remi@remirepo.net> - 1.17.0~beta2-2
 - rebuild
 
