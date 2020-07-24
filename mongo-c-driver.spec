@@ -127,8 +127,7 @@ Documentation: http://mongoc.org/libbson/%{version}/
 %endif
     -DENABLE_EXAMPLES:BOOL=OFF \
     -DENABLE_UNINSTALL:BOOL=OFF \
-    -DENABLE_CLIENT_SIDE_ENCRYPTION:BOOL=ON \
-    .
+    -DENABLE_CLIENT_SIDE_ENCRYPTION:BOOL=ON
 
 %cmake_build
 
