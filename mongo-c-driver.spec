@@ -133,11 +133,19 @@ Documentation: http://mongoc.org/libbson/%{version}/
     -DENABLE_CLIENT_SIDE_ENCRYPTION:BOOL=ON \
     -S .
 
+%if 0%{?cmake_build:1}
 %cmake_build
+%else
+make %{?_smp_mflags}
+%endif
 
 
 %install
+%if 0%{?cmake_install:1}
 %cmake_install
+%else
+make install DESTDIR=%{buildroot}
+%endif
 
 : Static library
 rm -f  %{buildroot}%{_libdir}/*.a
