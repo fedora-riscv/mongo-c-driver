@@ -18,7 +18,7 @@
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
 Version:   %{up_version}%{?up_prever:~%{up_prever}}
-Release:   1%{?dist}
+Release:   2%{?dist}
 # See THIRD_PARTY_NOTICES
 License:   ASL 2.0 and ISC and MIT and zlib
 URL:       https://github.com/%{gh_owner}/%{gh_project}
@@ -130,12 +130,12 @@ Documentation: http://mongoc.org/libbson/%{version}/
     -DENABLE_CLIENT_SIDE_ENCRYPTION:BOOL=ON \
     .
 
-make %{?_smp_mflags}
+%cmake_build
 
 
 
 %install
-make install DESTDIR=%{buildroot}
+%cmake_install
 
 : Static library
 rm -f  %{buildroot}%{_libdir}/*.a
@@ -215,6 +215,9 @@ exit $ret
 
 
 %changelog
+* Fri Jul 24 2020 Remi Collet <remi@remirepo.net> - 1.17.0~rc0-2
+- use more cmake macros
+
 * Fri Jul 17 2020 Remi Collet <remi@remirepo.net> - 1.17.0~rc0-1
 - update to 1.17.0-rc0
 
