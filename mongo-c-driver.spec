@@ -25,6 +25,8 @@ URL:       https://github.com/%{gh_owner}/%{gh_project}
 
 Source0:   https://github.com/%{gh_owner}/%{gh_project}/releases/download/%{up_version}%{?up_prever:-%{up_prever}}/%{gh_project}-%{up_version}%{?up_prever:-%{up_prever}}.tar.gz
 
+Patch0:    %{name}-upstream.patch
+
 BuildRequires: cmake >= 3.1
 BuildRequires: gcc
 # pkg-config may pull compat-openssl10
@@ -105,6 +107,7 @@ Documentation: http://mongoc.org/libbson/%{version}/
 
 %prep
 %setup -q -n %{gh_project}-%{up_version}%{?up_prever:-%{up_prever}}
+%patch0 -p1
 
 
 %build
@@ -127,10 +130,10 @@ Documentation: http://mongoc.org/libbson/%{version}/
 %endif
     -DENABLE_EXAMPLES:BOOL=OFF \
     -DENABLE_UNINSTALL:BOOL=OFF \
-    -DENABLE_CLIENT_SIDE_ENCRYPTION:BOOL=ON
+    -DENABLE_CLIENT_SIDE_ENCRYPTION:BOOL=ON \
+    -S .
 
 %cmake_build
-
 
 
 %install
@@ -216,6 +219,7 @@ exit $ret
 %changelog
 * Fri Jul 24 2020 Remi Collet <remi@remirepo.net> - 1.17.0~rc0-2
 - use more cmake macros
+- add upstream patch for latest sphinx
 
 * Fri Jul 17 2020 Remi Collet <remi@remirepo.net> - 1.17.0~rc0-1
 - update to 1.17.0-rc0
