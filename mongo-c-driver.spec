@@ -10,7 +10,7 @@
 %global gh_project   mongo-c-driver
 %global libname      libmongoc
 %global libver       1.0
-%global up_version   1.17.0
+%global up_version   1.17.1
 #global up_prever    rc0
 # disabled as require a MongoDB server
 %bcond_with          tests
@@ -225,6 +225,9 @@ exit $ret
 
 
 %changelog
+* Wed Oct  7 2020 Remi Collet <remi@remirepo.net> - 1.17.1-1
+- update to 1.17.1
+
 * Fri Jul 31 2020 Remi Collet <remi@remirepo.net> - 1.17.0-1
 - update to 1.17.0
 
