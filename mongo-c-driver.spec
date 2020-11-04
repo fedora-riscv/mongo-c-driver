@@ -10,7 +10,7 @@
 %global gh_project   mongo-c-driver
 %global libname      libmongoc
 %global libver       1.0
-%global up_version   1.17.1
+%global up_version   1.17.2
 #global up_prever    rc0
 # disabled as require a MongoDB server
 %bcond_with          tests
@@ -24,8 +24,6 @@ License:   ASL 2.0 and ISC and MIT and zlib
 URL:       https://github.com/%{gh_owner}/%{gh_project}
 
 Source0:   https://github.com/%{gh_owner}/%{gh_project}/releases/download/%{up_version}%{?up_prever:-%{up_prever}}/%{gh_project}-%{up_version}%{?up_prever:-%{up_prever}}.tar.gz
-
-Patch0:    %{name}-upstream.patch
 
 BuildRequires: cmake >= 3.1
 BuildRequires: gcc
@@ -107,7 +105,6 @@ Documentation: http://mongoc.org/libbson/%{version}/
 
 %prep
 %setup -q -n %{gh_project}-%{up_version}%{?up_prever:-%{up_prever}}
-%patch0 -p1
 
 
 %build
@@ -225,6 +222,9 @@ exit $ret
 
 
 %changelog
+* Wed Nov  4 2020 Remi Collet <remi@remirepo.net> - 1.17.2-1
+- update to 1.17.2
+
 * Wed Oct  7 2020 Remi Collet <remi@remirepo.net> - 1.17.1-1
 - update to 1.17.1
 
