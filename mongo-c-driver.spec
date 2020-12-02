@@ -10,7 +10,7 @@
 %global gh_project   mongo-c-driver
 %global libname      libmongoc
 %global libver       1.0
-%global up_version   1.17.2
+%global up_version   1.17.3
 #global up_prever    rc0
 # disabled as require a MongoDB server
 %bcond_with          tests
@@ -27,6 +27,7 @@ Source0:   https://github.com/%{gh_owner}/%{gh_project}/releases/download/%{up_v
 
 BuildRequires: cmake >= 3.1
 BuildRequires: gcc
+BuildRequires: make
 # pkg-config may pull compat-openssl10
 BuildRequires: openssl-devel
 BuildRequires: pkgconfig(libsasl2)
@@ -222,6 +223,9 @@ exit $ret
 
 
 %changelog
+* Wed Dec  2 2020 Remi Collet <remi@remirepo.net> - 1.17.3-1
+- update to 1.17.3
+
 * Wed Nov  4 2020 Remi Collet <remi@remirepo.net> - 1.17.2-1
 - update to 1.17.2
 
