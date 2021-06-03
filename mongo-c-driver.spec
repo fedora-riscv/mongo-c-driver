@@ -18,7 +18,7 @@
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
 Version:   %{up_version}%{?up_prever:~%{up_prever}}
-Release:   1%{?dist}
+Release:   2%{?dist}
 # See THIRD_PARTY_NOTICES
 License:   ASL 2.0 and ISC and MIT and zlib
 URL:       https://github.com/%{gh_owner}/%{gh_project}
@@ -109,6 +109,8 @@ Documentation: http://mongoc.org/libbson/%{version}/
 
 
 %build
+sed -e '/CMAKE_SKIP_BUILD_RPATH/s/OFF/ON/' -i CMakeLists.txt
+
 %cmake \
     -DENABLE_BSON:STRING=ON \
     -DENABLE_MONGOC:BOOL=ON \
@@ -223,8 +225,9 @@ exit $ret
 
 
 %changelog
-* Thu Jun  3 2021 Remi Collet <remi@remirepo.net> - 1.17.6-1
+* Thu Jun  3 2021 Remi Collet <remi@remirepo.net> - 1.17.6-2
 - update to 1.17.6
+- fix invalid rpath
 
 * Thu Feb  4 2021 Remi Collet <remi@remirepo.net> - 1.17.4-1
 - update to 1.17.4
