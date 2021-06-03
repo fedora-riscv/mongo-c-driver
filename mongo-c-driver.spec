@@ -10,7 +10,7 @@
 %global gh_project   mongo-c-driver
 %global libname      libmongoc
 %global libver       1.0
-%global up_version   1.17.5
+%global up_version   1.17.6
 #global up_prever    rc0
 # disabled as require a MongoDB server
 %bcond_with          tests
@@ -18,7 +18,7 @@
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
 Version:   %{up_version}%{?up_prever:~%{up_prever}}
-Release:   3%{?dist}
+Release:   1%{?dist}
 # See THIRD_PARTY_NOTICES
 License:   ASL 2.0 and ISC and MIT and zlib
 URL:       https://github.com/%{gh_owner}/%{gh_project}
@@ -223,6 +223,9 @@ exit $ret
 
 
 %changelog
+* Thu Jun  3 2021 Remi Collet <remi@remirepo.net> - 1.17.6-1
+- update to 1.17.6
+
 * Thu May 20 2021 Pete Walter <pwalter@fedoraproject.org> - 1.17.5-3
 - Rebuild for ICU 69
 
