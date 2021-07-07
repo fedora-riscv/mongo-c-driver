@@ -10,7 +10,7 @@
 %global gh_project   mongo-c-driver
 %global libname      libmongoc
 %global libver       1.0
-%global up_version   1.17.6
+%global up_version   1.17.7
 #global up_prever    rc0
 # disabled as require a MongoDB server
 %bcond_with          tests
@@ -225,6 +225,9 @@ exit $ret
 
 
 %changelog
+* Wed Jul  7 2021 Remi Collet <remi@remirepo.net> - 1.17.7-1
+- update to 1.17.7
+
 * Thu Jun  3 2021 Remi Collet <remi@remirepo.net> - 1.17.6-2
 - update to 1.17.6
 - fix invalid rpath
