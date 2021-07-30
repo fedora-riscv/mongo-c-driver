@@ -18,7 +18,7 @@
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
 Version:   %{up_version}%{?up_prever:~%{up_prever}}
-Release:   2%{?dist}
+Release:   3%{?dist}
 # See THIRD_PARTY_NOTICES
 License:   ASL 2.0 and ISC and MIT and zlib
 URL:       https://github.com/%{gh_owner}/%{gh_project}
@@ -109,8 +109,6 @@ Documentation: http://mongoc.org/libbson/%{version}/
 
 
 %build
-sed -e '/CMAKE_SKIP_BUILD_RPATH/s/OFF/ON/' -i CMakeLists.txt
-
 %cmake \
     -DENABLE_BSON:STRING=ON \
     -DENABLE_MONGOC:BOOL=ON \
@@ -131,6 +129,7 @@ sed -e '/CMAKE_SKIP_BUILD_RPATH/s/OFF/ON/' -i CMakeLists.txt
     -DENABLE_EXAMPLES:BOOL=OFF \
     -DENABLE_UNINSTALL:BOOL=OFF \
     -DENABLE_CLIENT_SIDE_ENCRYPTION:BOOL=ON \
+    -DCMAKE_SKIP_RPATH:BOOL=ON \
     -S .
 
 %if 0%{?cmake_build:1}
@@ -225,6 +224,10 @@ exit $ret
 
 
 %changelog
+* Fri Jul 30 2021 Remi Collet <remi@remirepo.net> - 1.18.0-3
+- use better fix for invalid RPATH using upstream solution from
+  https://jira.mongodb.org/browse/CDRIVER-4013
+
 * Thu Jul 22 2021 Fedora Release Engineering <releng@fedoraproject.org> - 1.18.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_35_Mass_Rebuild
 
