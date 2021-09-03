@@ -10,7 +10,7 @@
 %global gh_project   mongo-c-driver
 %global libname      libmongoc
 %global libver       1.0
-%global up_version   1.18.0
+%global up_version   1.19.0
 #global up_prever    rc0
 # disabled as require a MongoDB server
 %bcond_with          tests
@@ -109,8 +109,6 @@ Documentation: http://mongoc.org/libbson/%{version}/
 
 
 %build
-sed -e '/CMAKE_SKIP_BUILD_RPATH/s/OFF/ON/' -i CMakeLists.txt
-
 %cmake \
     -DENABLE_BSON:STRING=ON \
     -DENABLE_MONGOC:BOOL=ON \
@@ -131,6 +129,7 @@ sed -e '/CMAKE_SKIP_BUILD_RPATH/s/OFF/ON/' -i CMakeLists.txt
     -DENABLE_EXAMPLES:BOOL=OFF \
     -DENABLE_UNINSTALL:BOOL=OFF \
     -DENABLE_CLIENT_SIDE_ENCRYPTION:BOOL=ON \
+    -DCMAKE_SKIP_RPATH:BOOL=ON \
     -S .
 
 %if 0%{?cmake_build:1}
@@ -225,6 +224,11 @@ exit $ret
 
 
 %changelog
+* Fri Sep  3 2021 Remi Collet <remi@remirepo.net> - 1.19.0-1
+- update to 1.19.0
+- use better fix for invalid RPATH using upstream solution from
+  https://jira.mongodb.org/browse/CDRIVER-4013
+
 * Wed Jul 14 2021 Remi Collet <remi@remirepo.net> - 1.18.0-1
 - update to 1.18.0
 
