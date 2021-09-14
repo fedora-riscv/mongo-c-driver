@@ -18,7 +18,7 @@
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
 Version:   %{up_version}%{?up_prever:~%{up_prever}}
-Release:   1%{?dist}
+Release:   2%{?dist}
 # See THIRD_PARTY_NOTICES
 License:   ASL 2.0 and ISC and MIT and zlib
 URL:       https://github.com/%{gh_owner}/%{gh_project}
@@ -224,6 +224,9 @@ exit $ret
 
 
 %changelog
+* Tue Sep 14 2021 Sahana Prasad <sahana@redhat.com> - 1.19.0-2
+- Rebuilt with OpenSSL 3.0.0
+
 * Fri Sep  3 2021 Remi Collet <remi@remirepo.net> - 1.19.0-1
 - update to 1.19.0
 
