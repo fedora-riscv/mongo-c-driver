@@ -16,12 +16,12 @@
 %bcond_with          tests
 
 # disable for bootstrap (libmongocrypt needs libbson)
-%bcond_with       libmongocrypt
+%bcond_without       libmongocrypt
 
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
 Version:   %{up_version}%{?up_prever:~%{up_prever}}
-Release:   0%{?dist}
+Release:   1%{?dist}
 # See THIRD_PARTY_NOTICES
 License:   ASL 2.0 and ISC and MIT and zlib
 URL:       https://github.com/%{gh_owner}/%{gh_project}
