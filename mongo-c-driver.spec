@@ -21,7 +21,7 @@
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
 Version:   %{up_version}%{?up_prever:~%{up_prever}}
-Release:   1%{?dist}
+Release:   1.rv64%{?dist}
 # See THIRD_PARTY_NOTICES
 License:   Apache-2.0 AND ISC AND MIT AND Zlib
 URL:       https://github.com/%{gh_owner}/%{gh_project}
@@ -117,6 +117,10 @@ Documentation: http://mongoc.org/libbson/%{version}/
 
 
 %build
+%ifarch riscv64
+export LDFLAGS="%__global_ldflags -Wl,--no-as-needed -latomic -Wl,--as-needed"
+%endif
+
 %cmake \
     -DENABLE_BSON:STRING=ON \
     -DENABLE_MONGOC:BOOL=ON \
@@ -236,6 +240,9 @@ exit $ret
 
 
 %changelog
+* Mon Mar 21 2023 David Abdurachmanov <davidlt@rivosinc.com> - 1.23.4-1.rv64
+- Link to libatomic on riscv64
+
 * Tue May  9 2023 Remi Collet <remi@remirepo.net> - 1.23.4-1
 - update to 1.23.4
 
