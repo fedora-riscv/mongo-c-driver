@@ -1,7 +1,7 @@
 # remirepo/fedora spec file for mongo-c-driver
 #
-# Copyright (c) 2015-2022 Remi Collet
-# License: CC-BY-SA
+# Copyright (c) 2015-2023 Remi Collet
+# License: CC-BY-SA-4.0
 # http://creativecommons.org/licenses/by-sa/4.0/
 #
 # Please, preserve the changelog entries
@@ -10,7 +10,7 @@
 %global gh_project   mongo-c-driver
 %global libname      libmongoc
 %global libver       1.0
-%global up_version   1.23.1
+%global up_version   1.23.3
 #global up_prever    rc0
 # disabled as require a MongoDB server
 %bcond_with          tests
@@ -23,7 +23,7 @@ Summary:   Client library written in C for MongoDB
 Version:   %{up_version}%{?up_prever:~%{up_prever}}
 Release:   1%{?dist}
 # See THIRD_PARTY_NOTICES
-License:   ASL 2.0 and ISC and MIT and zlib
+License:   Apache-2.0 AND ISC AND MIT AND Zlib
 URL:       https://github.com/%{gh_owner}/%{gh_project}
 
 Source0:   https://github.com/%{gh_owner}/%{gh_project}/releases/download/%{up_version}%{?up_prever:-%{up_prever}}/%{gh_project}-%{up_version}%{?up_prever:-%{up_prever}}.tar.gz
@@ -236,6 +236,10 @@ exit $ret
 
 
 %changelog
+* Wed Apr  5 2023 Remi Collet <remi@remirepo.net> - 1.23.3-1
+- update to 1.23.3
+- use SPDX license ID
+
 * Thu Oct 20 2022 Remi Collet <remi@remirepo.net> - 1.23.1-1
 - update to 1.23.1
 
