@@ -16,7 +16,8 @@
 %bcond_with          tests
 
 # disable for bootstrap (libmongocrypt needs libbson)
-%bcond_without       libmongocrypt
+%bcond_with         libmongocrypt
+%bcond_without      bootstrap
 
 Name:      mongo-c-driver
 Summary:   Client library written in C for MongoDB
@@ -236,6 +237,9 @@ exit $ret
 
 
 %changelog
+* Sat May  13 2023 Liu Yang <Yang.Liu.sn@gmail.com> - 1.23.4-1~bootstrap
+- Bootstrap for Fedora 38 riscv64 build.
+
 * Tue May  9 2023 Remi Collet <remi@remirepo.net> - 1.23.4-1
 - update to 1.23.4
 
